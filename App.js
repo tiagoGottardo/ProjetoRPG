@@ -5,8 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import ProfileScreen from './routes/profile';
 import ActionsScreen from './routes/actions';
-import ItensScreen from './routes/itens';
+import ItemsScreen from './routes/items';
 import MapsScreen from './routes/maps';
+
+import { DrawerContent } from './components/DrawerContent';
 
 function NotificationsScreen({ navigation }) {
   return (
@@ -21,10 +23,10 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Profile">
+      <Drawer.Navigator initialRouteName="Profile" drawerContent={(props) => <DrawerContent {...props} />}>
         <Drawer.Screen name="Profile" component={ProfileScreen} />
         <Drawer.Screen name="Actions" component={ActionsScreen} />
-        <Drawer.Screen name="Itens" component={ItensScreen} />
+        <Drawer.Screen name="Items" component={ItemsScreen} />
         <Drawer.Screen name="Maps" component={MapsScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
