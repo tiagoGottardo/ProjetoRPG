@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Button, ImageBackgroundComponent, View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import ApiKeys from './components/ApiKeys';
+import * as firebase from 'firebase';
 
 import ProfileScreen from './routes/profile';
 import ActionsScreen from './routes/actions';
@@ -21,6 +23,9 @@ function NotificationsScreen({ navigation }) {
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+
+      if(!firebase.apps.length) { firebase.initializeApp(ApiKeys.firebaseConfig); }
+
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Profile" drawerContent={(props) => <DrawerContent {...props} />}>
