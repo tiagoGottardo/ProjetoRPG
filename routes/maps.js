@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Button, View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
+//import { createDrawerNavigator } from '@react-navigation/drawer';
+//import { NavigationContainer } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
 
