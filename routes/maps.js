@@ -1,24 +1,24 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Alert, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
 
+
 function MapsScreen({ navigation }) {
   const database = firebase.firestore();
-  const [map, setMap] = useState([]);
 
-  useEffect(() => {
-    database.collection("maps").onSnapshot((query)=> {
-      const list = []
-      query.forEach((doc) => {
-        list.push({ ...doc.data(), id: doc.id })
+    function addRegistryMap(mapName, mapUri) {
+      database
+      .collection('maps')
+      .add({
+        name: mapName,
+        uri: mapUri
       })
-      setMap(list)
-    })
-  }, [])
-
-
+      .then(() => {
+        console.log('User added!');
+      });
+    }
 
   useEffect(() => {
     (async () => {
@@ -30,8 +30,6 @@ function MapsScreen({ navigation }) {
       }
     })();
   }, []);
-
-  let imageID = Date.now();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -63,7 +61,9 @@ function MapsScreen({ navigation }) {
       var refMap = firebase.storage().ref().child("images").child(mapName).put(blob).then(() => {
         firebase.storage().ref().child("images").child(mapName).getDownloadURL().then((url_image) => {
           console.log("Uri: "+ url_image);
+          addRegistryMap(mapName, url_image);
         });
+        
       });
 
       return refMap
