@@ -24,7 +24,10 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
 
-      if(!firebase.apps.length) { firebase.initializeApp(ApiKeys.firebaseConfig); }
+      if(!firebase.apps.length) { 
+        firebase.initializeApp(ApiKeys.firebaseConfig); 
+        firebase.firestore().settings({ experimentalForceLongPolling: true });
+      }
 
   return (
     <NavigationContainer>
