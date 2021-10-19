@@ -1,38 +1,40 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Alert, Image, FlatList } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Alert, ImageBackground, FlatList } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
-//import { FlatList } from 'react-native-gesture-handler';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 function MapsScreen({ navigation }) {
   const [data, setData] = useState([]);
   const database = firebase.firestore();
 
-    const getMaps = () => {
-      database
-      .collection('maps')
-      .get()
-      .then((querySnapshot) => {
-        let listMapObjects = [];
-            querySnapshot.forEach((doc) => {
-            //console.log(doc.id + " => " + doc.data());
-            const map = {
-              id: doc.id,
-              name: doc.data().name,
-              uri: doc.data().uri
-            };
-            listMapObjects.push(map);
-          });
-          //console.log(listMapObjects);
-          setData(listMapObjects);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    }
+  const getMaps = () => {
+    database
+    .collection('maps')
+    .orderBy('name')
+    .get()
+    .then((snapshot) => {
+      let listMapObjects = [];
+          snapshot.forEach((doc) => {
+          //console.log(doc.id + " => " + doc.data());
+          const map = {
+            id: doc.id,
+            name: doc.data().name,
+            uri: doc.data().uri
+          };
+          listMapObjects.push(map);
+        });
+        //console.log(listMapObjects);
+        setData(listMapObjects);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  }
 
+    //const users = database.collection('maps').get();
+    //console.log(users);
     function addRegistryMap(mapName, mapUri) {
       database
       .collection('maps')
@@ -41,8 +43,21 @@ function MapsScreen({ navigation }) {
         uri: mapUri
       })
       .then(() => {
-        //console.log('User added!');
+        console.log('User added!');
       });
+      getMaps();
+    }
+
+    function delRegistryMap(mapId, mapName) {
+      firebase.storage().ref().child("images").child(mapName).delete()
+      database
+      .collection('maps')
+      .doc(mapId)
+      .delete()
+      .then(() => {
+        console.log('User deleted!');
+      });
+      getMaps();
     }
 
   useEffect(() => {
@@ -93,20 +108,8 @@ function MapsScreen({ navigation }) {
       });
 
       return refMap
-    }
+    } 
 
-    const Item = ({ item }) => (
-        <View style={{ flex:1 }}>
-          <Image source={{ uri: item.uri }} style={{ flex:1, resizeMode: "cover", aspectRatio: 1 }}/>
-        </View>
-    );
-
-    const renderItem = ({item}) => {
-      return(
-      <Item item={item} onPress={() => {}} />
-      )}
-
-    //getMaps();
     return (
     
     <View style={styles.container}>
@@ -114,12 +117,21 @@ function MapsScreen({ navigation }) {
           <FlatList
             data={data}
             keyExtractor={(item) => item.name}
-            renderItem={renderItem}
+            renderItem={({item}) => {
+              return (
+                <View style={{ flex: 1 }}>
+                    <ImageBackground source={{ uri: item.uri }} style={styles.imageBackground}>
+                      <TouchableOpacity style={styles.delImageButton} onPress={()=>delRegistryMap(item.id, item.name)}>
+                        <Icon name="trash" size={20} color="#FFF" />
+                      </TouchableOpacity>
+                    </ImageBackground>
+                </View>
+            )}}
           />
         </View>
       <View style={ { flex: 1, flexDirection: 'column-reverse', alignItems: 'flex-end', marginRight: 25, } } >
         <TouchableOpacity style={styles.addImageButton} onPress={pickImage} >
-          <Text style={{ color: 'white', fontSize: 20, fontWeight:"bold", marginTop: -2}}>+</Text>
+          <Text style={{ color: 'white', fontSize: 20, fontWeight:"bold"}}>+</Text>
         </TouchableOpacity>
       </View>
     </View> 
@@ -131,15 +143,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   addImageButton: {
-
     width:60,
     height:60,
     backgroundColor:"#1E90FF",
     borderRadius:30,
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
     marginBottom: 25
+  },
+  delImageButton: {
+    width:40,
+    height:40,
+    backgroundColor:"red",
+    borderRadius:20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10
+  },
+  imageBackground:{
+    flex:1, 
+    resizeMode: "cover", 
+    aspectRatio: 0.5,
+    alignItems: 'flex-end',
   }
 });
 
