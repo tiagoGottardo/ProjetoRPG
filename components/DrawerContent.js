@@ -31,17 +31,17 @@ export function DrawerContent(props) {
                           <View style={styles.section}>
                                   <Paragraph style={[styles.paragraph, styles.caption]}>16/21</Paragraph>
                                   <Icon name="heart" size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                                  <Caption style={styles.caption}>Life</Caption>
+                                  <Caption style={styles.caption}>Vida</Caption>
                           </View>
                           <View style={styles.section}>
                               <Paragraph style={[styles.paragraph, styles.caption]}>08/19</Paragraph>
                               <Icon name="emoticon-excited-outline" size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                              <Caption style={styles.caption}>Sanity</Caption>
+                              <Caption style={styles.caption}>Sanidade</Caption>
                           </View>
                             <View style={styles.section}>
                                   <Paragraph style={[styles.paragraph, styles.caption]}>03/03</Paragraph>
                                   <Icon name="arm-flex" size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                                  <Caption style={styles.caption}>Constitution</Caption>
+                                  <Caption style={styles.caption}>Constituição</Caption>
                             </View>
                        </View>
                     </ View>
@@ -49,19 +49,19 @@ export function DrawerContent(props) {
             <Drawer.Section style={styles.drawerSection}>
               <DrawerItem icon={() => (
                   <Icon name="account" size={ 20 }/>
-              )}  label="Profile" onPress={() => {props.navigation.navigate('Profile')}}/>
+              )}  label="Perfil" onPress={() => {props.navigation.navigate('Perfil')}}/>
 
             <DrawerItem icon={() => (
                   <Icon name="sword" size={ 20 }/>
-              )}  label="Actions" onPress={() => {props.navigation.navigate('Actions')}}/>
+              )}  label="Ações" onPress={() => {props.navigation.navigate('Ações')}}/>
 
             <DrawerItem icon={() => (
                   <Icon name="candle" size={ 20 }/>
-              )}  label="Items" onPress={() => {props.navigation.navigate('Items')}}/>
+              )}  label="Itens" onPress={() => {props.navigation.navigate('Itens')}}/>
 
             <DrawerItem icon={() => (
                   <Icon name="map" size={ 20 }/>
-              )}  label="Maps" onPress={() => {props.navigation.navigate('Maps')}}/>
+              )}  label="Mapas" onPress={() => {props.navigation.navigate('Mapas')}}/>
                 </Drawer.Section>
             </View>
       </DrawerContentScrollView>

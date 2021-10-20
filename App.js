@@ -31,11 +31,11 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Profile" drawerContent={(props) => <DrawerContent {...props} />}>
-        <Drawer.Screen name="Profile" component={ProfileScreen} />
-        <Drawer.Screen name="Actions" component={ActionsScreen} />
-        <Drawer.Screen name="Items" component={ItemsScreen} />
-        <Drawer.Screen name="Maps" component={MapsScreen} />
+      <Drawer.Navigator initialRouteName="Perfil" drawerContent={(props) => <DrawerContent {...props} />}>
+        <Drawer.Screen name="Perfil" component={ProfileScreen} />
+        <Drawer.Screen name="Ações" component={ActionsScreen} />
+        <Drawer.Screen name="Itens" component={ItemsScreen} />
+        <Drawer.Screen name="Mapas" component={MapsScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

@@ -17,7 +17,6 @@ function MapsScreen({ navigation }) {
     .then((snapshot) => {
       let listMapObjects = [];
           snapshot.forEach((doc) => {
-          //console.log(doc.id + " => " + doc.data());
           const map = {
             id: doc.id,
             name: doc.data().name,
@@ -25,7 +24,6 @@ function MapsScreen({ navigation }) {
           };
           listMapObjects.push(map);
         });
-        //console.log(listMapObjects);
         setData(listMapObjects);
     })
     .catch((e) => {
@@ -33,17 +31,12 @@ function MapsScreen({ navigation }) {
     });
   }
 
-    //const users = database.collection('maps').get();
-    //console.log(users);
     function addRegistryMap(mapName, mapUri) {
       database
       .collection('maps')
       .add({
         name: mapName,
         uri: mapUri
-      })
-      .then(() => {
-        console.log('User added!');
       });
       getMaps();
     }
@@ -53,10 +46,7 @@ function MapsScreen({ navigation }) {
       database
       .collection('maps')
       .doc(mapId)
-      .delete()
-      .then(() => {
-        console.log('User deleted!');
-      });
+      .delete();
       getMaps();
     }
 
@@ -79,14 +69,12 @@ function MapsScreen({ navigation }) {
       quality: 1
     });
 
-    //console.log(result);
-
     var imageEndName = Date.now();
 
     if (!result.cancelled) {
         uploadImage(result.uri, ("map" + imageEndName))
         .then(() => {
-          Alert.alert('Success');
+          Alert.alert('Success', 'Your was uploaded!');
         })
         .catch((error) => {
           Alert.alert(error);
@@ -100,7 +88,6 @@ function MapsScreen({ navigation }) {
 
       var refMap = firebase.storage().ref().child("images").child(mapName).put(blob).then(() => {
         firebase.storage().ref().child("images").child(mapName).getDownloadURL().then((url_image) => {
-          //console.log("Uri: "+ url_image);
           addRegistryMap(mapName, url_image);
           getMaps();
         });
@@ -129,9 +116,9 @@ function MapsScreen({ navigation }) {
             )}}
           />
         </View>
-      <View style={ { flex: 1, flexDirection: 'column-reverse', alignItems: 'flex-end', marginRight: 25, } } >
+      <View style={styles.viewButton} >
         <TouchableOpacity style={styles.addImageButton} onPress={pickImage} >
-          <Text style={{ color: 'white', fontSize: 20, fontWeight:"bold"}}>+</Text>
+          <Text style={styles.plus}>+</Text>
         </TouchableOpacity>
       </View>
     </View> 
@@ -165,6 +152,17 @@ const styles = StyleSheet.create({
     resizeMode: "cover", 
     aspectRatio: 0.5,
     alignItems: 'flex-end',
+  },
+  viewButton: {
+    flex: 1, 
+    flexDirection: 'column-reverse', 
+    alignItems: 'flex-end', 
+    marginRight: 25
+  },
+  plus: {
+    color: 'white', 
+    fontSize: 20, 
+    fontWeight:"bold"
   }
 });
 
