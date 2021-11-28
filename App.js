@@ -3,7 +3,7 @@ import { Button, ImageBackgroundComponent, View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import ApiKeys from './components/ApiKeys';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 
 import ProfileScreen from './routes/profile';
 import ActionsScreen from './routes/actions';
@@ -31,7 +31,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Perfil" drawerContent={(props) => <DrawerContent {...props} />}>
+      <Drawer.Navigator initialRouteName="Mapas" drawerContent={(props) => <DrawerContent {...props} />}>
         <Drawer.Screen name="Perfil" component={ProfileScreen} />
         <Drawer.Screen name="Ações" component={ActionsScreen} />
         <Drawer.Screen name="Itens" component={ItemsScreen} />

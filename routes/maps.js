@@ -1,16 +1,24 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Alert, ImageBackground, FlatList } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Alert, Image, FlatList, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/storage';
+import { TapGestureHandler } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { contains } from 'micromatch';
+import { auto } from 'eol';
+
+
+var deviceWidth = Dimensions.get('window').width;
+var deviceHeight = Dimensions.get('window').height;
 
 function MapsScreen({ navigation }) {
   const [data, setData] = useState([]);
-  const database = firebase.firestore();
 
   const getMaps = () => {
-    database
+    firebase.firestore()
     .collection('maps')
     .orderBy('name')
     .get()
@@ -32,7 +40,7 @@ function MapsScreen({ navigation }) {
   }
 
     function addRegistryMap(mapName, mapUri) {
-      database
+      firebase.firestore()
       .collection('maps')
       .add({
         name: mapName,
@@ -43,7 +51,7 @@ function MapsScreen({ navigation }) {
 
     function delRegistryMap(mapId, mapName) {
       firebase.storage().ref().child("images").child(mapName).delete()
-      database
+      firebase.firestore()
       .collection('maps')
       .doc(mapId)
       .delete();
@@ -59,7 +67,7 @@ function MapsScreen({ navigation }) {
           alert('Sorry, we need library roll permissions to make this work!');
         }
       }
-    })();
+    });
   }, []);
 
   const pickImage = async () => {
@@ -100,22 +108,25 @@ function MapsScreen({ navigation }) {
     return (
     
     <View style={styles.container}>
-        <View>
-          <FlatList
+        <FlatList
             data={data}
             keyExtractor={(item) => item.name}
             renderItem={({item}) => {
               return (
-                <View style={{ flex: 1 }}>
-                    <ImageBackground source={{ uri: item.uri }} style={styles.imageBackground}>
-                      <TouchableOpacity style={styles.delImageButton} onPress={()=>delRegistryMap(item.id, item.name)}>
-                        <Icon name="trash" size={20} color="#FFF" />
-                      </TouchableOpacity>
-                    </ImageBackground>
+                <View style={styles.container}>
+                  <TapGestureHandler
+                    numberOfTaps={2}
+                    onActivated={() => {
+                      delRegistryMap(item.id, item.name)
+                      Alert.alert('Success', 'Your map was deleted!');
+                    }}
+                  >
+                    <Image source={{ uri: item.uri }} style={styles.imageBackground} />
+                  </TapGestureHandler>
+                    
                 </View>
             )}}
           />
-        </View>
       <View style={styles.viewButton} >
         <TouchableOpacity style={styles.addImageButton} onPress={pickImage} >
           <Text style={styles.plus}>+</Text>
@@ -138,20 +149,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 25
   },
-  delImageButton: {
-    width:40,
-    height:40,
-    backgroundColor:"red",
-    borderRadius:20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 10
-  },
   imageBackground:{
-    flex:1, 
-    resizeMode: "cover", 
-    aspectRatio: 0.5,
-    alignItems: 'flex-end',
+    flex:1,
+    width: deviceWidth,
+    height: deviceHeight,
+    resizeMode: "cover"
   },
   viewButton: {
     flex: 1, 
