@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 function ItemsScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-
+      
     </View>
   );
 }

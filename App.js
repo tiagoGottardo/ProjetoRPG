@@ -1,42 +1,27 @@
 import * as React from 'react';
-import { Button, ImageBackgroundComponent, View, Text } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import ApiKeys from './components/ApiKeys';
 import firebase from 'firebase/app';
 
-import ProfileScreen from './routes/profile';
-import ActionsScreen from './routes/actions';
-import ItemsScreen from './routes/items';
-import MapsScreen from './routes/maps';
+import HomeScreen from './routes/home';
+import LoginScreen from './routes/login';
 
-import { DrawerContent } from './components/DrawerContent';
-
-function NotificationsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
-  );
-}
-
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
 
-      if(!firebase.apps.length) { 
+      if(!firebase.apps.length) {
         firebase.initializeApp(ApiKeys.firebaseConfig); 
         firebase.firestore().settings({ experimentalForceLongPolling: true });
       }
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Mapas" drawerContent={(props) => <DrawerContent {...props} />}>
-        <Drawer.Screen name="Perfil" component={ProfileScreen} />
-        <Drawer.Screen name="Ações" component={ActionsScreen} />
-        <Drawer.Screen name="Itens" component={ItemsScreen} />
-        <Drawer.Screen name="Mapas" component={MapsScreen} />
-      </Drawer.Navigator>
+      <Stack.Navigator initialRouteName="Home" >
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: true}} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false}} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
