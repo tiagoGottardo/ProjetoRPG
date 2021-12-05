@@ -3,10 +3,11 @@ import { Button, View, Text } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
-function ProfileScreen({ navigation }) {
+function ProfileScreen({ navigation, route }) {
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile</Text>
+      <Text>u</Text>
     </View>
   );
 }

@@ -9,7 +9,7 @@ import LoginScreen from './routes/login';
 
 const Stack = createStackNavigator();
 
-export default function App() {
+export default function App({ route }) {
 
       if(!firebase.apps.length) {
         firebase.initializeApp(ApiKeys.firebaseConfig); 
@@ -18,8 +18,8 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" >
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: true}} />
+      <Stack.Navigator initialRouteName="Login" >
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false}} />
       </Stack.Navigator>
     </NavigationContainer>

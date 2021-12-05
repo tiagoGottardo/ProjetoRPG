@@ -11,8 +11,19 @@ import {
   TouchableRipple
  } from 'react-native-paper';
  import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import firebase from 'firebase/app';
 
 export function DrawerContent(props) {
+
+  const Logout = () => {
+    firebase.auth().signOut().then(() => {
+      props.navigation.navigate("Login")
+      alert("User desconnected")
+    }).catch((error) => {
+      alert(error)
+    });
+  }
+
   return(
 
     <View style={{flex:1}}>
@@ -62,6 +73,10 @@ export function DrawerContent(props) {
             <DrawerItem icon={() => (
                   <Icon name="map" size={ 20 }/>
               )}  label="Mapas" onPress={() => {props.navigation.navigate('Mapas')}}/>
+
+              <DrawerItem style={styles.logout} icon={() => (
+                  <Icon name="logout-variant" size={ 20 }/>
+              )}  label="Logout" onPress={Logout}/>
                 </Drawer.Section>
             </View>
       </DrawerContentScrollView>
@@ -104,4 +119,7 @@ const styles = StyleSheet.create({
   drawerSection: {
     marginTop: 15
   },
+  logout: {
+
+  }
 });

@@ -6,20 +6,16 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { TapGestureHandler } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { contains } from 'micromatch';
-import { auto } from 'eol';
-
 
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 
-function MapsScreen({ navigation }) {
+function MapsScreen({ navigation, route }) {
   const [data, setData] = useState([]);
 
   const getMaps = () => {
     firebase.firestore()
-    .collection('maps')
+    .collection(route.params.idUser)
     .orderBy('name')
     .get()
     .then((snapshot) => {
@@ -40,8 +36,9 @@ function MapsScreen({ navigation }) {
   }
 
     function addRegistryMap(mapName, mapUri) {
+
       firebase.firestore()
-      .collection('maps')
+      .collection(route.params.idUser)
       .add({
         name: mapName,
         uri: mapUri
@@ -52,9 +49,10 @@ function MapsScreen({ navigation }) {
     function delRegistryMap(mapId, mapName) {
       firebase.storage().ref().child("images").child(mapName).delete()
       firebase.firestore()
-      .collection('maps')
+      .collection(route.params.idUser)
       .doc(mapId)
       .delete();
+      alert("You image was deleted!")
       getMaps();
     }
 
@@ -82,10 +80,10 @@ function MapsScreen({ navigation }) {
     if (!result.cancelled) {
         uploadImage(result.uri, ("map" + imageEndName))
         .then(() => {
-          Alert.alert('Success', 'Your was uploaded!');
+          alert('Success', 'Your was uploaded!');
         })
         .catch((error) => {
-          Alert.alert(error);
+          alert(error);
         });
       }
     }
@@ -118,7 +116,6 @@ function MapsScreen({ navigation }) {
                     numberOfTaps={2}
                     onActivated={() => {
                       delRegistryMap(item.id, item.name)
-                      Alert.alert('Success', 'Your map was deleted!');
                     }}
                   >
                     <Image source={{ uri: item.uri }} style={styles.imageBackground} />

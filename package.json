@@ -35,6 +35,9 @@
   "devDependencies": {
     "@babel/core": "~7.9.0"
   },
+  "rnpm":{
+    "assets":["./assets/fonts/"]
+  },
   "private": true,
   "name": "ProjetoRPG",
   "version": "1.0.0"

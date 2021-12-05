@@ -13,19 +13,24 @@ import { DrawerContent } from '../components/DrawerContent';
 const Drawer = createDrawerNavigator();
 
 
-export default function HomeScreen() {
+export default function HomeScreen({ route, navigation }) {
 
-      if(!firebase.apps.length) {
-        firebase.initializeApp(ApiKeys.firebaseConfig); 
-        firebase.firestore().settings({ experimentalForceLongPolling: true });
-      }
+    let idUser = route.params.idUser
+
+    if(!firebase.apps.length) {
+      firebase.initializeApp(ApiKeys.firebaseConfig); 
+      firebase.firestore().settings({ experimentalForceLongPolling: true });
+    }
+
 
   return (
-      <Drawer.Navigator initialRouteName="Mapas" drawerContent={(props) => <DrawerContent {...props} />}>
-        <Drawer.Screen name="Perfil" component={ProfileScreen} />
-        <Drawer.Screen name="Ações" component={ActionsScreen} />
-        <Drawer.Screen name="Itens" component={ItemsScreen} />
-        <Drawer.Screen name="Mapas" component={MapsScreen} />
+      <Drawer.Navigator
+        drawerContent={(props) => <DrawerContent {...props} />}
+      >
+        <Drawer.Screen name="Perfil" component={ProfileScreen} initialParams={{ idUser: idUser }} />
+        <Drawer.Screen name="Ações" component={ActionsScreen} initialParams={{ idUser: idUser }} />
+        <Drawer.Screen name="Itens" component={ItemsScreen} initialParams={{ idUser: idUser }} />
+        <Drawer.Screen name="Mapas" component={MapsScreen} initialParams={{ idUser: idUser }} />
       </Drawer.Navigator>
   );
 }
