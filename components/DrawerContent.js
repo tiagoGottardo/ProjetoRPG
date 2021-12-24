@@ -43,7 +43,6 @@ export function DrawerContent(props, { route }) {
             <DrawerItem  style={styles.drawerItem} icon={() => (
               <Icon name="account" size={ 30 }/>
             )}  label="Perfil" onPress={() => {props.navigation.navigate('Perfil')}}/>
-
             <DrawerItem style={styles.drawerItem} icon={() => (
               <Icon name="sword" size={ 30 }/>
             )}  label="Ações" onPress={() => {props.navigation.navigate('Ações')}}/>

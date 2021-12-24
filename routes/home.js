@@ -23,7 +23,6 @@ export default function HomeScreen({ route, navigation }) {
       firebase.firestore().settings({ experimentalForceLongPolling: true });
     }
 
-
   return (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} />}

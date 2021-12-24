@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { TapGestureHandler } from 'react-native-gesture-handler';
@@ -9,10 +9,18 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 
-
 function ProfileScreen({ route }) {
   const [data, setData] = useState([]);
-  const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }]);
+  const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
+  const [text, onChangeText] = useState(user[4].desc);
+
+  const editTextInput = () => {
+    if (text != user[4].desc) {
+      firebase.firestore().collection(route.params.idUser + 'user').doc('Descricao').update({
+        desc: text
+      })
+    }
+  }
 
   const getUserInfo = () => {
     firebase.firestore().collection(route.params.idUser + 'user').orderBy('id')
@@ -23,10 +31,12 @@ function ProfileScreen({ route }) {
           id: doc.data().id,
           name: doc.data().name,
           qtd: doc.data().qtd,
-          uri: doc.data().uri
+          uri: doc.data().uri,
+          desc: doc.data().desc
         };
         listInfoObjects.push(userInfo);
       });
+      onChangeText(listInfoObjects[4].desc);
       setUser(listInfoObjects);
     })
   }
@@ -125,7 +135,7 @@ function ProfileScreen({ route }) {
   const uploadImage = async (uri, imageName) => {
     const response = await fetch(uri);
     const blob = await response.blob();
-    //firebase.storage().ref().child("perfil").child(imageName).delete()
+    firebase.storage().ref().child("perfil").child(imageName).delete()
     var refMap = firebase.storage().ref().child("perfil").child(imageName).put(blob).then(() => {
       firebase.storage().ref().child("perfil").child(imageName).getDownloadURL().then((url_image) => {
         editRegistryImage(imageName, url_image);
@@ -274,6 +284,20 @@ function ProfileScreen({ route }) {
             )}}
         />
       </View>
+      <KeyboardAvoidingView>
+        <Text style={{ alignSelf: 'center', fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
+          Descrição do personagem
+        </Text>
+        <TextInput
+          style={styles.input}
+          onBlur={editTextInput}
+          onChangeText={onChangeText}
+          value={text}
+          multiline = {true}
+          numberOfLines = {8}
+          underlineColorAndroid="white"
+        />
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -281,7 +305,7 @@ function ProfileScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5"
+    backgroundColor: "white",
   },
   userImage: {
     alignSelf: "center",
@@ -304,6 +328,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     marginTop: 4,
+  },
+  input: {
+    height: 400,
+    width: 370,
+    margin: 20,
+    borderWidth: 3,
+    borderColor: 'black',
+    alignSelf: 'center',
+    padding: 10,
+    fontSize: 17
   },
 })
 
