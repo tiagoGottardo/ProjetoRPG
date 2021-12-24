@@ -16,6 +16,7 @@ const Drawer = createDrawerNavigator();
 export default function HomeScreen({ route, navigation }) {
 
     let idUser = route.params.idUser
+    // initialParams={{ idUser: idUser }}
 
     if(!firebase.apps.length) {
       firebase.initializeApp(ApiKeys.firebaseConfig); 
@@ -26,6 +27,7 @@ export default function HomeScreen({ route, navigation }) {
   return (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} />}
+        initialRouteName='Perfil'
       >
         <Drawer.Screen name="Perfil" component={ProfileScreen} initialParams={{ idUser: idUser }} />
         <Drawer.Screen name="Ações" component={ActionsScreen} initialParams={{ idUser: idUser }} />

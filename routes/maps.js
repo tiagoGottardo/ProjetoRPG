@@ -15,7 +15,7 @@ function MapsScreen({ navigation, route }) {
 
   const getMaps = () => {
     firebase.firestore()
-    .collection(route.params.idUser)
+    .collection(route.params.idUser + 'maps')
     .orderBy('name')
     .get()
     .then((snapshot) => {
@@ -38,7 +38,7 @@ function MapsScreen({ navigation, route }) {
     function addRegistryMap(mapName, mapUri) {
 
       firebase.firestore()
-      .collection(route.params.idUser)
+      .collection(route.params.idUser + 'maps')
       .add({
         name: mapName,
         uri: mapUri
@@ -49,7 +49,7 @@ function MapsScreen({ navigation, route }) {
     function delRegistryMap(mapId, mapName) {
       firebase.storage().ref().child("images").child(mapName).delete()
       firebase.firestore()
-      .collection(route.params.idUser)
+      .collection(route.params.idUser + 'maps')
       .doc(mapId)
       .delete();
       alert("You image was deleted!")
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   addImageButton: {
     width:60,
     height:60,
-    backgroundColor:"#1E90FF",
+    backgroundColor:"black",
     borderRadius:30,
     justifyContent: 'center',
     alignItems: 'center',
