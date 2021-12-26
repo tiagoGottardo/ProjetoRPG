@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Alert, Image, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
@@ -123,10 +126,22 @@ function MapsScreen({ navigation, route }) {
                     
                 </View>
             )}}
+            showsHorizontalScrollIndicator={false}
           />
       <View style={styles.viewButton} >
         <TouchableOpacity style={styles.addImageButton} onPress={pickImage} >
-          <Text style={styles.plus}>+</Text>
+        <Icon name='image-plus' size={20} color='#fffefe' />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
+          <Icon name='menu' size={30} color="#fffefe" />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
+          Mapas
+        </Text>
+        <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
+          <Icon name='square-edit-outline' size={30} color='#212125' />
         </TouchableOpacity>
       </View>
     </View> 
@@ -140,11 +155,13 @@ const styles = StyleSheet.create({
   addImageButton: {
     width:60,
     height:60,
-    backgroundColor:"black",
+    backgroundColor:"#212125",
     borderRadius:30,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 25
+    position: 'absolute',
+    right: 20,
+    bottom: 30
   },
   imageBackground:{
     flex:1,
@@ -152,16 +169,17 @@ const styles = StyleSheet.create({
     height: deviceHeight,
     resizeMode: "cover"
   },
-  viewButton: {
-    flex: 1, 
-    flexDirection: 'column-reverse', 
-    alignItems: 'flex-end', 
-    marginRight: 25
-  },
-  plus: {
-    color: 'white', 
-    fontSize: 20, 
-    fontWeight:"bold"
+  header: {
+    height: 65,
+    flexDirection: 'row',
+    backgroundColor: '#212125',
+    margin: 15,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    width: (deviceWidth - 30),
+    alignSelf: 'center'
   }
 });
 

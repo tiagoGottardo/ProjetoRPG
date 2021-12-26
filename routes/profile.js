@@ -1,18 +1,24 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView } from 'react-native';
+import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { TapGestureHandler } from 'react-native-gesture-handler';
+import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 
-function ProfileScreen({ route }) {
+function ProfileScreen({ route, navigation }) {
   const [data, setData] = useState([]);
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [text, onChangeText] = useState(user[4].desc);
+
+  let [fontsLoaded] = useFonts({
+    Righteous_400Regular
+  });
+
 
   const editTextInput = () => {
     if (text != user[4].desc) {
@@ -40,7 +46,7 @@ function ProfileScreen({ route }) {
       setUser(listInfoObjects);
     })
   }
-
+  
   const getStatus = () => {
     firebase.firestore().collection(route.params.idUser + 'status').orderBy('id')
     .onSnapshot((querySnapshot) => {
@@ -169,10 +175,26 @@ function ProfileScreen({ route }) {
         }
       }
     });
+    navigation.openDrawer();
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView 
+      style={styles.container} 
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
+          <Icon name='menu' size={30} color="#fffefe" />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
+          Perfil
+        </Text>
+        <TouchableOpacity style={styles.editButton} onPress={() => {navigation.navigate('Editar Perfil')}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
+          <Icon name='square-edit-outline' size={30} color='#fffefe' />
+        </TouchableOpacity>
+      </View>
       <TapGestureHandler
         numberOfTaps={2}
         onActivated={pickImage}
@@ -285,7 +307,7 @@ function ProfileScreen({ route }) {
         />
       </View>
       <KeyboardAvoidingView>
-        <Text style={{ alignSelf: 'center', fontSize: 20, marginTop: 10, fontWeight: 'bold' }}>
+        <Text style={{ alignSelf: 'center', fontSize: 25, marginTop: 10, fontFamily: 'Righteous_400Regular', color: '#212125' }}>
           Descrição do personagem
         </Text>
         <TextInput
@@ -295,10 +317,9 @@ function ProfileScreen({ route }) {
           value={text}
           multiline = {true}
           numberOfLines = {8}
-          underlineColorAndroid="white"
         />
       </KeyboardAvoidingView>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -307,18 +328,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+  editButton: {
+    width:30,
+    height: 30,
+    backgroundColor:"#212125",
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   userImage: {
     alignSelf: "center",
-    marginTop: 25,
+    marginTop: 10,
     width: 250,
     height: 250,
     borderRadius: 250
   },
   userName: {
-    fontSize: 25,
+    fontSize: 30,
     alignSelf: "center",
     marginTop: 15,
-    fontWeight: "bold"
+    fontFamily: 'Righteous_400Regular',
+    color: '#212125'
   },
   status: {
     alignItems: 'center',
@@ -334,11 +363,21 @@ const styles = StyleSheet.create({
     width: 370,
     margin: 20,
     borderWidth: 3,
-    borderColor: 'black',
+    borderColor: '#212125',
     alignSelf: 'center',
     padding: 10,
-    fontSize: 17
+    fontSize: 17,
+    color: '#212125'
   },
+  header: {
+    height: 65,
+    flexDirection: 'row',
+    backgroundColor: '#212125',
+    margin: 15,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  }
 })
 
 export default ProfileScreen;
