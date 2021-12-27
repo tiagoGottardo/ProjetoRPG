@@ -161,7 +161,6 @@ function ProfileScreen({ route, navigation }) {
     .update({
       uri: imageUri
     });
-    //getMaps();
   }
 
   useEffect(() => {
@@ -175,7 +174,6 @@ function ProfileScreen({ route, navigation }) {
         }
       }
     });
-    navigation.openDrawer();
   }, []);
 
   return (
@@ -204,7 +202,6 @@ function ProfileScreen({ route, navigation }) {
           source={{ uri: user[0].uri }}
         />
       </TapGestureHandler>
-      
       <Text style={styles.userName}>{user[1].name}</Text>
       <View style={{ alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', width: 370 }}>
         <View style={{ 
@@ -213,9 +210,10 @@ function ProfileScreen({ route, navigation }) {
           height: 40,
           flexDirection: 'row',
           alignItems: 'center',
-          borderRadius: 50,
+          borderRadius: 20,
           alignContent: 'space-around',
           marginTop: 15,
+          borderWidth: 1
         }}>
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <Icon name='star' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
@@ -238,9 +236,10 @@ function ProfileScreen({ route, navigation }) {
           height: 40,
           flexDirection: 'row',
           alignItems: 'center',
-          borderRadius: 50,
+          borderRadius: 20,
           alignContent: 'space-around',
           marginTop: 15,
+          borderWidth: 1
         }}>
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <Icon name='fire' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
@@ -264,43 +263,44 @@ function ProfileScreen({ route, navigation }) {
           keyExtractor={item => item.id}
           renderItem={({item}) => {
             return(
-              <View style={{ 
-                  backgroundColor: item.color, 
-                  width: 370,
-                  height: 40,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  borderRadius: 50,
-                  alignContent: 'space-around',
-                  marginBottom: 10,
-                  border: 100,  
-                }}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Icon name={item.icon} size={20} style={{ marginRight: 5, marginLeft: 6 }} />
-                  <Text style={styles.title}>{item.title}</Text>
+              <View style={{ width: 370, height: 40, marginBottom: 10, flexDirection: 'row', borderRadius: 20 }}>
+                <View style={{ flex: item.qtd, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
+                <View style={{ flex: (item.qtdMax - item.qtd) }}/>
+                <View style={{ width: 370, height: 40, justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
+                  <View style={{ width: 390, height: 60, borderRadius: 30, borderWidth: 10, borderColor: 'white' }} />
                 </View>
-                <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
-                  <View>
-                    <Text>{item.qtd}</Text>
+                <View style={{ 
+                    width: 370,
+                    height: 40,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderRadius: 20,
+                    marginBottom: 10,
+                    justifyContent: 'space-around',
+                    position: 'absolute',
+                    borderWidth: 1,
+                  }}>
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <Icon name={item.icon} size={20} style={{ marginRight: 5, marginLeft: 6 }} />
+                    <Text style={styles.title}>{item.title}</Text>
                   </View>
-                  <Text>/</Text>
-                  <View>
-                    <Text>{item.qtdMax}</Text>
+                  <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
+                    <Text>{item.qtd}/{item.qtdMax}</Text>
                   </View>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 6 }}>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusTen(item.title, item.id)}>
-                  <Icon name='plus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOne(item.title, item.id)}>
-                  <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOne(item.title, item.id)}>
-                  <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusTen(item.title, item.id)}>
-                  <Icon name='minus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
+                  <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 6 }}>
+                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusTen(item.title, item.id)}>
+                    <Icon name='plus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOne(item.title, item.id)}>
+                    <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOne(item.title, item.id)}>
+                    <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusTen(item.title, item.id)}>
+                    <Icon name='minus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             )}}

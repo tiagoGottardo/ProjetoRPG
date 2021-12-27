@@ -1,18 +1,26 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Touchable } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import firebase from 'firebase';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 
 function LoginScreen({ navigation }) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errorLogin, setErrorLogin] = React.useState('');
+  const [userLog, setUserLog] = React.useState(true);
+
+  let [fontsLoaded] = useFonts({
+    Righteous_400Regular
+  });
 
   React.useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         var uid = user.uid;
         navigation.navigate("Home", { idUser: user.uid })
+      } else {
+        setUserLog(false)
       }
     });
   }, []);
@@ -31,61 +39,68 @@ function LoginScreen({ navigation }) {
       let errorMessage = error.message;
     });
   }
-
-      return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? "padding" : "height"}
-      style={styles.container}
-    >
-      <Text style={styles.title}>Projeto RPG</Text>
-      <TextInput 
-        style={styles.input} 
-        placeholder="Enter your email"
-        type="text"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput 
-        style={styles.input} 
-        placeholder="Enter your password"
-        type="text"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry={true}
-      />
-      {errorLogin === true
-      ?
-      <View style={styles.contentAlert}>
-        <MaterialCommunityIcons 
-           name="alert-circle"
-           size={24}
-           color="#bdbdbd"
-        />
-        <Text style={styles.warnAlert}>Invalid email or password</Text>
+  return(
+    <View style = {{ flex: 1 }}>
+      {userLog?
+      <View style={{ flex: 1, backgroundColor: '#212125', alignItems: 'center', justifyContent: 'center' }}>
+        <Image source={require('../assets/iconImage-final.png')} style={{ width: 200, height: 200 }} />
       </View>
       :
-      <View></View>
+      <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? "padding" : "height"}
+            style={styles.container}
+          >
+            <Text style={styles.title}>Projeto RPG</Text>
+            <TextInput 
+              style={styles.input} 
+              placeholder="Enter your email"
+              type="text"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput 
+              style={styles.input} 
+              placeholder="Enter your password"
+              type="text"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={true}
+            />
+            {errorLogin === true
+            ?
+            <View style={styles.contentAlert}>
+              <MaterialCommunityIcons 
+                 name="alert-circle"
+                 size={24}
+                 color="#bdbdbd"
+              />
+              <Text style={styles.warnAlert}>Invalid email or password</Text>
+            </View>
+            :
+            <View></View>
+            }
+      
+            {email === "" || password === ""
+            ?
+            <TouchableOpacity
+              disabled={true}
+              style={styles.buttonLogin}
+            >
+              <Text style={styles.textButtonLogin}>Login</Text>
+            </TouchableOpacity>
+            :
+            <TouchableOpacity
+              disabled={false}
+              onPress={loginFirebase}
+              style={styles.buttonLogin}
+            >
+              <Text style={styles.textButtonLogin}>Login</Text>
+            </TouchableOpacity>
+            }
+      
+          </KeyboardAvoidingView>
       }
-
-      {email === "" || password === ""
-      ?
-      <TouchableOpacity
-        disabled={true}
-        style={styles.buttonLogin}
-      >
-        <Text style={styles.textButtonLogin}>Login</Text>
-      </TouchableOpacity>
-      :
-      <TouchableOpacity
-        disabled={false}
-        onPress={loginFirebase}
-        style={styles.buttonLogin}
-      >
-        <Text style={styles.textButtonLogin}>Login</Text>
-      </TouchableOpacity>
-      }
-
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
@@ -103,28 +118,29 @@ const styles = StyleSheet.create({
     padding: 10,
     height: 50,
     borderBottomWidth: 1,
-    borderBottomColor: "black",
+    borderBottomColor: "#212125",
     marginLeft: "auto",
     marginRight: "auto",
-    color: 'black'
+    color: '#212125'
   },
   title: {
-    fontSize: 48,
-    color: "black",
+    fontSize: 50,
+    color: "#212125",
     marginBottom: 40,
-    fontWeight: "bold",
+    fontFamily: 'Righteous_400Regular'
   },
   buttonLogin: {
     width: 200,
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "black",
+    backgroundColor: "#212125",
     borderRadius: 50,
     marginTop: 30
   },
   textButtonLogin: {
     color: "white",
+    fontFamily: 'Righteous_400Regular',
     fontSize: 20
   },
   contentAlert: {

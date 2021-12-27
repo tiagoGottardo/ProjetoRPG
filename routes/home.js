@@ -22,7 +22,6 @@ export default function HomeScreen({ route, navigation }) {
     });
 
     let idUser = route.params.idUser
-    // initialParams={{ idUser: idUser }}
 
     if(!firebase.apps.length) {
       firebase.initializeApp(ApiKeys.firebaseConfig); 
