@@ -16,17 +16,6 @@ export default function App({ route }) {
     firebase.firestore().settings({ experimentalForceLongPolling: true });
   }
 
-  var logged;
-
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      console.log(route)
-    } else {
-    }
-  })
-
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login' >

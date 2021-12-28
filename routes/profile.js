@@ -15,9 +15,6 @@ function ProfileScreen({ route, navigation }) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [text, onChangeText] = useState(user[4].desc);
 
-  let [fontsLoaded] = useFonts({
-    Righteous_400Regular
-  });
 
 
   const editTextInput = () => {
