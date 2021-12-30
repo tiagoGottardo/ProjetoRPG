@@ -1,21 +1,31 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
+
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['VirtualizedLists']);
+
+var deviceWidth = Dimensions.get('window').width;
+var deviceHeight = Dimensions.get('window').height;
 
 function ProfileScreen({ route, navigation }) {
   const [data, setData] = useState([]);
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [text, onChangeText] = useState(user[4].desc);
 
-
+  useFonts({
+    Righteous_400Regular
+  });
 
   const editTextInput = () => {
     if (text != user[4].desc) {
@@ -142,11 +152,9 @@ function ProfileScreen({ route, navigation }) {
     var refMap = firebase.storage().ref().child("perfil").child(imageName).put(blob).then(() => {
       firebase.storage().ref().child("perfil").child(imageName).getDownloadURL().then((url_image) => {
         editRegistryImage(imageName, url_image);
-        //getMaps();
       });
-      
     });
-
+    
     return refMap
   } 
 
@@ -174,149 +182,151 @@ function ProfileScreen({ route, navigation }) {
   }, []);
 
   return (
-    <ScrollView 
-      style={styles.container} 
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
-          <Icon name='menu' size={30} color="#fffefe" />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
-          Perfil
-        </Text>
-        <TouchableOpacity style={styles.editButton} onPress={() => {navigation.navigate('Editar Perfil')}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
-          <Icon name='square-edit-outline' size={30} color='#fffefe' />
-        </TouchableOpacity>
-      </View>
-      <TapGestureHandler
-        numberOfTaps={2}
-        onActivated={pickImage}
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView 
+        style={styles.container} 
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
       >
-        <Image
-          style={styles.userImage}
-          source={{ uri: user[0].uri }}
-        />
-      </TapGestureHandler>
-      <Text style={styles.userName}>{user[1].name}</Text>
-      <View style={{ alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', width: 370 }}>
-        <View style={{ 
-          backgroundColor: "#FFD700",
-          width: 180,
-          height: 40,
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderRadius: 20,
-          alignContent: 'space-around',
-          marginTop: 15,
-          borderWidth: 1
-        }}>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            <Icon name='star' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name='menu' size={30} color="#fffefe" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
+            Perfil
+          </Text>
+          <TouchableOpacity style={styles.editButton} onPress={() => {navigation.navigate('Editar Perfil')}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
+            <Icon name='square-edit-outline' size={30} color='#fffefe' />
+          </TouchableOpacity>
+        </View>
+        <TapGestureHandler
+          numberOfTaps={2}
+          onActivated={pickImage}
+        >
+          <Image
+            style={styles.userImage}
+            source={{ uri: user[0].uri }}
+          />
+        </TapGestureHandler>
+        <Text style={styles.userName}>{user[1].name}</Text>
+        <View style={{ alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', width: (deviceWidth - 50) }}>
+          <View style={{ 
+            backgroundColor: "#FFD700",
+            width: ((deviceWidth - 60)/ 2),
+            height: 40,
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 20,
+            alignContent: 'space-around',
+            marginTop: 15,
+            borderWidth: 1
+          }}>
+            <View style={{ flexDirection: 'row', flex: 1 }}>
+              <Icon name='star' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 15, fontWeight: "500", marginTop: 5, alignSelf: 'center' }}>{user[2].qtd}</Text>
+            </View>
+            <View style={{ flex: 2, flexDirection: 'row-reverse', marginRight: 6 }}>
+              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOneLvl('Nvl', 2)}>
+                <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+              </TouchableOpacity>
+              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOneLvl('Nvl', 2)}>
+                <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 15, fontWeight: "500", marginTop: 5, alignSelf: 'center' }}>{user[2].qtd}</Text>
-          </View>
-          <View style={{ flex: 2, flexDirection: 'row-reverse', marginRight: 6 }}>
-            <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOneLvl('Nvl', 2)}>
-              <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOneLvl('Nvl', 2)}>
-              <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-            </TouchableOpacity>
+          <View style={{ 
+            backgroundColor: "#F4A460",
+            width: ((deviceWidth - 60)/ 2),
+            height: 40,
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 20,
+            alignContent: 'space-around',
+            marginTop: 15,
+            borderWidth: 1
+          }}>
+            <View style={{ flexDirection: 'row', flex: 1 }}>
+              <Icon name='fire' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 15, fontWeight: "500", marginTop: 5, alignSelf: 'center' }}>{user[3].qtd}</Text>
+            </View>
+            <View style={{ flex: 2, flexDirection: 'row-reverse', marginRight: 6 }}>
+              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOneLvl('NvlMagia', 3)}>
+                <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+              </TouchableOpacity>
+              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOneLvl('NvlMagia', 3)}>
+                <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-        <View style={{ 
-          backgroundColor: "#F4A460",
-          width: 180,
-          height: 40,
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderRadius: 20,
-          alignContent: 'space-around',
-          marginTop: 15,
-          borderWidth: 1
-        }}>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
-            <Icon name='fire' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
-          </View>
-          <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 15, fontWeight: "500", marginTop: 5, alignSelf: 'center' }}>{user[3].qtd}</Text>
-          </View>
-          <View style={{ flex: 2, flexDirection: 'row-reverse', marginRight: 6 }}>
-            <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOneLvl('NvlMagia', 3)}>
-              <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOneLvl('NvlMagia', 3)}>
-              <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-            </TouchableOpacity>
-          </View>
+        <View style={styles.status}>
+          <FlatList
+            data={data}
+            keyExtractor={item => item.id}
+            renderItem={({item}) => {
+              return(
+                <View style={{ width: (deviceWidth - 50), height: 40, marginBottom: 10, flexDirection: 'row', borderRadius: 20 }}>
+                  <View style={{ flex: item.qtd, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
+                  <View style={{ flex: (item.qtdMax - item.qtd) }}/>
+                  <View style={{ width: (deviceWidth - 50), height: 40, justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
+                    <View style={{ width: (deviceWidth - 30), height: 60, borderRadius: 30, borderWidth: 10, borderColor: 'white' }} />
+                  </View>
+                  <View style={{
+                      width: (deviceWidth - 50),
+                      height: 40,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      borderRadius: 20,
+                      marginBottom: 10,
+                      justifyContent: 'space-around',
+                      position: 'absolute',
+                      borderWidth: 1,
+                    }}>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <Icon name={item.icon} size={20} style={{ marginRight: 5, marginLeft: 6 }} />
+                      <Text style={styles.title}>{item.title}</Text>
+                    </View>
+                    <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
+                      <Text>{item.qtd}/{item.qtdMax}</Text>
+                    </View>
+                    <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 6 }}>
+                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusTen(item.title, item.id)}>
+                      <Icon name='plus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOne(item.title, item.id)}>
+                      <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOne(item.title, item.id)}>
+                      <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusTen(item.title, item.id)}>
+                      <Icon name='minus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              )}}
+          />
         </View>
-      </View>
-      <View style={styles.status}>
-        <FlatList
-          data={data}
-          keyExtractor={item => item.id}
-          renderItem={({item}) => {
-            return(
-              <View style={{ width: 370, height: 40, marginBottom: 10, flexDirection: 'row', borderRadius: 20 }}>
-                <View style={{ flex: item.qtd, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
-                <View style={{ flex: (item.qtdMax - item.qtd) }}/>
-                <View style={{ width: 370, height: 40, justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
-                  <View style={{ width: 390, height: 60, borderRadius: 30, borderWidth: 10, borderColor: 'white' }} />
-                </View>
-                <View style={{ 
-                    width: 370,
-                    height: 40,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    borderRadius: 20,
-                    marginBottom: 10,
-                    justifyContent: 'space-around',
-                    position: 'absolute',
-                    borderWidth: 1,
-                  }}>
-                  <View style={{ flex: 1, flexDirection: 'row' }}>
-                    <Icon name={item.icon} size={20} style={{ marginRight: 5, marginLeft: 6 }} />
-                    <Text style={styles.title}>{item.title}</Text>
-                  </View>
-                  <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
-                    <Text>{item.qtd}/{item.qtdMax}</Text>
-                  </View>
-                  <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 6 }}>
-                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusTen(item.title, item.id)}>
-                    <Icon name='plus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOne(item.title, item.id)}>
-                    <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOne(item.title, item.id)}>
-                    <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusTen(item.title, item.id)}>
-                    <Icon name='minus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            )}}
-        />
-      </View>
-      <KeyboardAvoidingView>
-        <Text style={{ alignSelf: 'center', fontSize: 25, marginTop: 10, fontFamily: 'Righteous_400Regular', color: '#212125' }}>
-          Descrição do personagem
-        </Text>
-        <TextInput
-          style={styles.input}
-          onBlur={editTextInput}
-          onChangeText={onChangeText}
-          value={text}
-          multiline = {true}
-          numberOfLines = {8}
-        />
-      </KeyboardAvoidingView>
-    </ScrollView>
+        <KeyboardAvoidingView>
+          <Text style={{ alignSelf: 'center', fontSize: (deviceWidth/20), marginTop: 10, fontFamily: 'Righteous_400Regular', color: '#212125' }}>
+            Descrição do personagem
+          </Text>
+          <TextInput
+            style={styles.input}
+            onBlur={editTextInput}
+            onChangeText={onChangeText}
+            value={text}
+            multiline = {true}
+            numberOfLines = {8}
+          />
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -335,12 +345,12 @@ const styles = StyleSheet.create({
   userImage: {
     alignSelf: "center",
     marginTop: 10,
-    width: 250,
-    height: 250,
-    borderRadius: 250
+    width: (deviceWidth - 200),
+    height: (deviceWidth - 200),
+    borderRadius: (deviceWidth - 200)
   },
   userName: {
-    fontSize: 30,
+    fontSize: (deviceWidth/ 14),
     alignSelf: "center",
     marginTop: 15,
     fontFamily: 'Righteous_400Regular',
@@ -357,7 +367,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 400,
-    width: 370,
+    width: (deviceWidth - 60),
     margin: 20,
     borderWidth: 3,
     borderColor: '#212125',

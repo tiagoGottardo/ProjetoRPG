@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, StyleSheet, FlatList } from 'react-native';
+import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, StyleSheet, FlatList, Platform, ScrollView, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 
@@ -8,14 +9,15 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 
+var deviceWidth = Dimensions.get('window').width;
+var deviceHeight = Dimensions.get('window').height;
+
 function EditProfileScreen({ route, navigation }) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [data, setData] = useState([]);
   const [text, onChangeText] = useState(user[1].name);
 
-  let [fontsLoaded] = useFonts({
-    Righteous_400Regular
-  });
+  useFonts({ Righteous_400Regular });
 
   const editTextInput = () => {
     if (text != user[1].name) {
@@ -106,82 +108,82 @@ function EditProfileScreen({ route, navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => { navigation.navigate('Perfil') }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
-          <Icon name='arrow-left' size={30} color="#fffefe" />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
-          Editar Perfil
-        </Text>
-        <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
-          <Icon name='square-edit-outline' size={30} color='#212125' />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.status}>
-        <Text style={{ fontFamily: 'Righteous_400Regular', fontSize: 35, marginBottom: 20, color: '#212125' }}>Status Máximo</Text>
-        <FlatList
-          data={data}
-          keyExtractor={item => item.id}
-          renderItem={({item}) => {
-            return(
-              <View style={{ 
-                  backgroundColor: item.color, 
-                  width: 370,
-                  height: 40,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  borderRadius: 50,
-                  alignContent: 'space-around',
-                  marginBottom: 10,
-                  borderWidth: 1
-                }}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
-                  <Icon name={item.icon} size={20} style={{ marginRight: 5, marginLeft: 6 }} />
-                  <Text style={styles.title}>{item.title}</Text>
-                </View>
-                <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
-                  <Text>{item.qtdMax}</Text>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 6 }}>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusTen(item.title, item.id)}>
-                  <Icon name='plus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOne(item.title, item.id)}>
-                  <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOne(item.title, item.id)}>
-                  <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusTen(item.title, item.id)}>
-                  <Icon name='minus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}}
-        />
-      </View>
-      <KeyboardAvoidingView style={{ flexDirection: 'row', margin: 10, height: 40, alignItems: 'center', justifyContent: 'center', paddingLeft: 10, borderBottomWidth: 2 }}>
-        <Text style={{ fontFamily: 'Righteous_400Regular', fontSize: 30, color: '#212125' }}>
-          Nome:
-        </Text>
-        <TextInput
-          style={styles.input}
-          onBlur={editTextInput}
-          onChangeText={onChangeText}
-          value={text}
-        />
-      </KeyboardAvoidingView>
-    </View>
-
-
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => { navigation.navigate('Perfil') }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name='arrow-left' size={30} color="#fffefe" />
+            </TouchableOpacity>
+            <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
+              Editar Perfil
+            </Text>
+            <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
+              <Icon name='square-edit-outline' size={30} color='#212125' />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.status}>
+            <Text style={styles.titleStatusMax}>Status Máximo</Text>
+            <FlatList
+              data={data}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => {
+                return(
+                  <View style={styles.statusList} backgroundColor={item.color}>
+                    <View style={styles.container} flexDirection='row'>
+                      <Icon name={item.icon} size={(deviceWidth/17)} style={styles.statusIcon} />
+                      <Text style={styles.title}>{item.title}</Text>
+                    </View>
+                    <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
+                      <Text style={styles.title}>{item.qtdMax}</Text>
+                    </View>
+                    <View style={{ flex: 1, flexDirection: 'row-reverse', marginLeft: 3 }}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => {PlusTen(item.title, item.id)}}>
+                        <Icon name='plus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => PlusOne(item.title, item.id)}>
+                        <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => MinusOne(item.title, item.id)}>
+                        <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => MinusTen(item.title, item.id)}>
+                        <Icon name='minus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}}
+            />
+          </View>
+          <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? "padding" : "height"} 
+            style={styles.avoidingView}
+          >
+            <Text style={styles.nomeLabel}>
+              Nome:
+            </Text>
+            <TextInput
+              style={styles.input}
+              onBlur={editTextInput}
+              onChangeText={onChangeText}
+              value={text}
+              width={(deviceWidth - 150)}
+              fontSize={(deviceWidth/12)}
+            />
+          </KeyboardAvoidingView>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "white",
+    flex: 1
   },
   header: {
     height: 65,
@@ -194,11 +196,9 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: 270,
     marginLeft: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 30,
     color: '#212125',
     fontFamily: 'Righteous_400Regular'
   },
@@ -207,9 +207,54 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   title: {
-    fontSize: 15,
-    fontWeight: "500",
-    marginTop: 4,
+    fontSize: deviceWidth/24,
+    alignSelf: 'center'
+  },
+  statusButton: {
+    width: (deviceWidth/14),
+    height: (deviceWidth/14),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 3
+  },
+  statusIconButton: {
+    marginRight: 5,
+    marginLeft: 5
+  },
+  statusList: {
+    width: (deviceWidth - 50),
+    height: (deviceWidth/9),
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: (deviceWidth/18),
+    alignContent: 'space-around',
+    marginBottom: (deviceWidth/36),
+    borderWidth: 1
+  },
+  nomeLabel: {
+    fontFamily: 'Righteous_400Regular',
+    fontSize: (deviceWidth/ 12),
+    color: '#212125'
+  },
+  avoidingView: {
+    flexDirection: 'row',
+    width: (deviceWidth - 50),
+    height: 90, alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderBottomWidth: 2,
+    paddingTop: Platform.OS === "ios" ? 0 : 50
+  },
+    titleStatusMax: {
+    fontFamily: 'Righteous_400Regular',
+    fontSize: (deviceWidth/11),
+    marginBottom: 20,
+    color: '#212125'
+  },
+  statusIcon: {
+    marginRight: 5,
+    marginLeft: 7,
+    alignSelf: 'center'
   }
 })
 

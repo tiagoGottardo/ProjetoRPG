@@ -10,10 +10,6 @@ function LoginScreen({ navigation }) {
   const [errorLogin, setErrorLogin] = React.useState('');
   const [userLog, setUserLog] = React.useState(true);
 
-  let [fontsLoaded] = useFonts({
-    Righteous_400Regular
-  });
-
   React.useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -47,58 +43,57 @@ function LoginScreen({ navigation }) {
       </View>
       :
       <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? "padding" : "height"}
-            style={styles.container}
-          >
-            <Text style={styles.title}>Projeto RPG</Text>
-            <TextInput 
-              style={styles.input} 
-              placeholder="Enter your email"
-              type="text"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput 
-              style={styles.input} 
-              placeholder="Enter your password"
-              type="text"
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              secureTextEntry={true}
-            />
-            {errorLogin === true
-            ?
-            <View style={styles.contentAlert}>
-              <MaterialCommunityIcons 
-                 name="alert-circle"
-                 size={24}
-                 color="#bdbdbd"
-              />
-              <Text style={styles.warnAlert}>Invalid email or password</Text>
-            </View>
-            :
-            <View></View>
-            }
-      
-            {email === "" || password === ""
-            ?
-            <TouchableOpacity
-              disabled={true}
-              style={styles.buttonLogin}
-            >
-              <Text style={styles.textButtonLogin}>Login</Text>
-            </TouchableOpacity>
-            :
-            <TouchableOpacity
-              disabled={false}
-              onPress={loginFirebase}
-              style={styles.buttonLogin}
-            >
-              <Text style={styles.textButtonLogin}>Login</Text>
-            </TouchableOpacity>
-            }
-      
-          </KeyboardAvoidingView>
+        behavior={Platform.OS === 'ios' ? "padding" : "height"}
+        style={styles.container}
+      >
+        <Text style={styles.title}>Projeto RPG</Text>
+        <TextInput 
+          style={styles.input} 
+          placeholder="Enter your email"
+          type="text"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+        <TextInput 
+          style={styles.input} 
+          placeholder="Enter your password"
+          type="text"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
+        />
+        {errorLogin === true
+        ?
+        <View style={styles.contentAlert}>
+          <MaterialCommunityIcons 
+            name="alert-circle"
+            size={24}
+            color="#bdbdbd"
+          />
+          <Text style={styles.warnAlert}>Invalid email or password</Text>
+        </View>
+        :
+        <View></View>
+        }
+        
+        {email === "" || password === ""
+        ?
+        <TouchableOpacity
+          disabled={true}
+          style={styles.buttonLogin}
+        >
+          <Text style={styles.textButtonLogin}>Login</Text>
+        </TouchableOpacity>
+        :
+        <TouchableOpacity
+          disabled={false}
+          onPress={loginFirebase}
+          style={styles.buttonLogin}
+        >
+          <Text style={styles.textButtonLogin}>Login</Text>
+        </TouchableOpacity>
+        }
+      </KeyboardAvoidingView>
       }
     </View>
   )
