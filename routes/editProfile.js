@@ -2,12 +2,13 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, StyleSheet, FlatList, Platform, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDrawerStatus } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
+
 
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -16,8 +17,7 @@ function EditProfileScreen({ route, navigation }) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [data, setData] = useState([]);
   const [text, onChangeText] = useState(user[1].name);
-
-  useFonts({ Righteous_400Regular });
+  const isDrawerOpen = useDrawerStatus() === 'closed';
 
   const editTextInput = () => {
     if (text != user[1].name) {
@@ -45,10 +45,10 @@ function EditProfileScreen({ route, navigation }) {
       setUser(listInfoObjects);
     })
   }
-  
+
   const getStatus = () => {
     firebase.firestore().collection(route.params.idUser + 'status').orderBy('id')
-    .onSnapshot((querySnapshot) => {
+    .get().then((querySnapshot) => {
       let listStatusObjects = [];
       querySnapshot.forEach((doc) => {
         var status = {
@@ -65,41 +65,25 @@ function EditProfileScreen({ route, navigation }) {
     })
   }
 
-  const PlusOne = (nameDoc, i) => {
-    console.log(nameDoc, i)
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtdMax: data[i].qtdMax++
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtdMax: data[i].qtdMax++
-    })
+  const updateStatus = (nameDoc, addOrLess, howMuch) => {
+    if (addOrLess == "+") {
+      firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
+        qtdMax: firebase.firestore.FieldValue.increment(howMuch)
+      });
+    } else {
+      firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
+        qtdMax: firebase.firestore.FieldValue.increment(-howMuch)
+      });
+    }
   }
 
-  const MinusOne = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtdMax: (data[i].qtdMax - 1)
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtdMax: (data[i].qtdMax - 1)
-    })
-  }
-
-  const PlusTen = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtdMax: (data[i].qtdMax + 10)
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: (data[i].qtdMax + 10)
-    })
-  }
-
-  const MinusTen = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtdMax: (data[i].qtdMax - 10)
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtdMax: (data[i].qtdMax - 10)
-    })
+  const AddOrLess = (nameDoc, i, addOrLess, howMuch) => {
+    if(addOrLess == '+'){
+      setData(prev => prev.map(data => data.id === i ? {...data, qtdMax: data.qtdMax += howMuch} : data));
+    } else {
+      setData(prev => prev.map(data => data.id === i ? {...data, qtdMax: data.qtdMax -= howMuch} : data));
+    }
+    updateStatus(nameDoc, addOrLess, howMuch);
   }
 
   useEffect(() => {
@@ -142,21 +126,22 @@ function EditProfileScreen({ route, navigation }) {
                       <Text style={styles.title}>{item.qtdMax}</Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row-reverse', marginLeft: 3 }}>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => {PlusTen(item.title, item.id)}}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '+', 10)}>
                         <Icon name='plus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => PlusOne(item.title, item.id)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => { AddOrLess(item.title, item.id, '+', 1);}}>
                         <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => MinusOne(item.title, item.id)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 1)}>
                         <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => MinusTen(item.title, item.id)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 10)}>
                         <Icon name='minus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
                     </View>
                   </View>
-                )}}
+                )
+              }}
             />
           </View>
           <KeyboardAvoidingView 

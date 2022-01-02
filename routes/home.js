@@ -40,7 +40,7 @@ export default function HomeScreen({ route, navigation }) {
         <Drawer.Screen name="Ações" component={ActionsScreen} initialParams={{ idUser: idUser }} />
         <Drawer.Screen name="Itens" component={ItemsScreen} initialParams={{ idUser: idUser }} />
         <Drawer.Screen name="Mapas" component={MapsScreen} initialParams={{ idUser: idUser }} />
-        <Drawer.Screen name="Editar Perfil" component={EditProfileScreen} initialParams={{ idUser: idUser }}/>
+        <Drawer.Screen name="Editar Perfil" component={EditProfileScreen} initialParams={{ idUser: idUser }} options={{ swipeEnabled: false }}/>
         <Drawer.Screen name="Drawer" component={DrawerContent} initialParams={{ idUser: idUser }}/>
       </Drawer.Navigator>
   );

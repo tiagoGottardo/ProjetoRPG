@@ -23,10 +23,6 @@ function ProfileScreen({ route, navigation }) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [text, onChangeText] = useState(user[4].desc);
 
-  useFonts({
-    Righteous_400Regular
-  });
-
   const editTextInput = () => {
     if (text != user[4].desc) {
       firebase.firestore().collection(route.params.idUser + 'user').doc('Descricao').update({
@@ -154,7 +150,7 @@ function ProfileScreen({ route, navigation }) {
         editRegistryImage(imageName, url_image);
       });
     });
-    
+
     return refMap
   } 
 
@@ -171,15 +167,16 @@ function ProfileScreen({ route, navigation }) {
   useEffect(() => {
     getStatus();
     getUserInfo();
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need library roll permissions to make this work!');
-        }
-      }
-    });
   }, []);
+
+  async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need library roll permissions to make this work!');
+      }
+    }
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -270,8 +267,8 @@ function ProfileScreen({ route, navigation }) {
             renderItem={({item}) => {
               return(
                 <View style={{ width: (deviceWidth - 50), height: 40, marginBottom: 10, flexDirection: 'row', borderRadius: 20 }}>
-                  <View style={{ flex: item.qtd, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
-                  <View style={{ flex: (item.qtdMax - item.qtd) }}/>
+                  <View style={{ flex: 1, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
+                  <View style={{ flex: 0 }}/>
                   <View style={{ width: (deviceWidth - 50), height: 40, justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
                     <View style={{ width: (deviceWidth - 30), height: 60, borderRadius: 30, borderWidth: 10, borderColor: 'white' }} />
                   </View>

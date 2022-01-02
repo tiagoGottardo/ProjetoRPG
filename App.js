@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ApiKeys from './components/ApiKeys';
 import firebase from 'firebase';
+import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 
 import HomeScreen from './routes/home';
 import LoginScreen from './routes/login';
@@ -10,6 +11,10 @@ import LoginScreen from './routes/login';
 const Stack = createStackNavigator();
 
 export default function App({ route }) {
+
+  const [loaded] = useFonts({
+    Righteous_400Regular
+  });
 
   if(!firebase.apps.length) {
     firebase.initializeApp(ApiKeys.firebaseConfig); 
