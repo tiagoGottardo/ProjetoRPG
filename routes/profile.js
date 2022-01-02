@@ -2,10 +2,9 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import * as ImagePicker from 'expo-image-picker';
 import { TapGestureHandler } from 'react-native-gesture-handler';
-import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as ImagePicker from 'expo-image-picker';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -52,7 +51,7 @@ function ProfileScreen({ route, navigation }) {
   
   const getStatus = () => {
     firebase.firestore().collection(route.params.idUser + 'status').orderBy('id')
-    .onSnapshot((querySnapshot) => {
+    .get().then((querySnapshot) => {
       let listStatusObjects = [];
       querySnapshot.forEach((doc) => {
         var status = {
@@ -69,58 +68,37 @@ function ProfileScreen({ route, navigation }) {
     })
   }
 
-  const PlusOneLvl = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
-      qtd: user[i].qtd++
-    })
-    firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
-      qtd: user[i].qtd++
-    })
+  const updateStatus = (nameDoc, addOrLess, howMuch) => {
+    if (addOrLess == "+") {
+      firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
+        qtd: firebase.firestore.FieldValue.increment(howMuch)
+      });
+    } else {
+      firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
+        qtd: firebase.firestore.FieldValue.increment(-howMuch)
+      });
+    }
   }
 
-  const MinusOneLvl = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
-      qtd: user[i].qtd--
-    })
-    firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
-      qtd: user[i].qtd--
-    })
+  const AddOrLess = (nameDoc, i, addOrLess, howMuch) => {
+    if(addOrLess == '+'){
+      setData(prev => prev.map(data => data.id === i ? {...data, qtd: data.qtd += howMuch} : data));
+    } else {
+      setData(prev => prev.map(data => data.id === i ? {...data, qtd: data.qtd -= howMuch} : data));
+    }
+    updateStatus(nameDoc, addOrLess, howMuch);
   }
 
-  const PlusOne = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: data[i].qtd++
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: data[i].qtd++
-    })
-  }
-
-  const MinusOne = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: (data[i].qtd - 1)
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: (data[i].qtd - 1)
-    })
-  }
-
-  const PlusTen = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: (data[i].qtd + 10)
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: (data[i].qtd + 10)
-    })
-  }
-
-  const MinusTen = (nameDoc, i) => {
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: (data[i].qtd - 10)
-    })
-    firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
-      qtd: (data[i].qtd - 10)
-    })
+  const addOrLessLvl = (nameDoc, i, addOrLess) => {
+    if (addOrLess == "+") {
+      firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
+        qtd: firebase.firestore.FieldValue.increment(1)
+      });
+    } else {
+      firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
+        qtd: firebase.firestore.FieldValue.increment(-1)
+      });
+    }
   }
 
   const pickImage = async () => {
@@ -150,12 +128,10 @@ function ProfileScreen({ route, navigation }) {
         editRegistryImage(imageName, url_image);
       });
     });
-
     return refMap
   } 
 
   function editRegistryImage(imageName, imageUri) {
-
     firebase.firestore()
     .collection(route.params.idUser + 'user')
     .doc('FotoPerfil')
@@ -165,9 +141,12 @@ function ProfileScreen({ route, navigation }) {
   }
 
   useEffect(() => {
-    getStatus();
     getUserInfo();
   }, []);
+
+  const enterScreen = navigation.addListener ('focus', () => {
+    getStatus();
+  })
 
   async () => {
     if (Platform.OS !== 'web') {
@@ -206,56 +185,36 @@ function ProfileScreen({ route, navigation }) {
           />
         </TapGestureHandler>
         <Text style={styles.userName}>{user[1].name}</Text>
-        <View style={{ alignSelf: 'center', flexDirection: 'row', justifyContent: 'space-between', width: (deviceWidth - 50) }}>
-          <View style={{ 
-            backgroundColor: "#FFD700",
-            width: ((deviceWidth - 60)/ 2),
-            height: 40,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderRadius: 20,
-            alignContent: 'space-around',
-            marginTop: 15,
-            borderWidth: 1
-          }}>
+        <View style={styles.statusLvl}>
+          <View backgroundColor='#FFD700' style={styles.statusListLvl}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Icon name='star' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
+              <Icon name='star' size={20} style={styles.statusIcon} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 15, fontWeight: "500", marginTop: 5, alignSelf: 'center' }}>{user[2].qtd}</Text>
+              <Text style={styles.title}>{user[2].qtd}</Text>
             </View>
-            <View style={{ flex: 2, flexDirection: 'row-reverse', marginRight: 6 }}>
-              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOneLvl('Nvl', 2)}>
-                <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+            <View style={{ flex: 2, flexDirection: 'row-reverse' }}>
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('Nvl', 2, '+')}>
+                <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOneLvl('Nvl', 2)}>
-                <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('Nvl', 2, '-')}>
+                <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ 
-            backgroundColor: "#F4A460",
-            width: ((deviceWidth - 60)/ 2),
-            height: 40,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderRadius: 20,
-            alignContent: 'space-around',
-            marginTop: 15,
-            borderWidth: 1
-          }}>
+          <View backgroundColor='#F4A460' style={styles.statusListLvl}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Icon name='fire' size={20} style={{ marginRight: 4, marginLeft: 6 }} />
+              <Icon name='fire' size={20} style={styles.statusIcon} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 15, fontWeight: "500", marginTop: 5, alignSelf: 'center' }}>{user[3].qtd}</Text>
+              <Text style={styles.title}>{user[3].qtd}</Text>
             </View>
-            <View style={{ flex: 2, flexDirection: 'row-reverse', marginRight: 6 }}>
-              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOneLvl('NvlMagia', 3)}>
-                <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+            <View style={{ flex: 2, flexDirection: 'row-reverse' }}>
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('NvlMagia', 3, '+')}>
+                <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOneLvl('NvlMagia', 3)}>
-                <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('NvlMagia', 3, '-')}>
+                <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
             </View>
           </View>
@@ -266,42 +225,32 @@ function ProfileScreen({ route, navigation }) {
             keyExtractor={item => item.id}
             renderItem={({item}) => {
               return(
-                <View style={{ width: (deviceWidth - 50), height: 40, marginBottom: 10, flexDirection: 'row', borderRadius: 20 }}>
-                  <View style={{ flex: 1, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
-                  <View style={{ flex: 0 }}/>
-                  <View style={{ width: (deviceWidth - 50), height: 40, justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
-                    <View style={{ width: (deviceWidth - 30), height: 60, borderRadius: 30, borderWidth: 10, borderColor: 'white' }} />
+                <View style={{ width: (deviceWidth - 50), height: (deviceWidth/9), marginBottom: 10, flexDirection: 'row', borderRadius: 20 }}>
+                  <View style={{ flex: item.qtd, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
+                  <View style={{ flex: (item.qtdMax - item.qtd) }}/>
+                  <View style={{ width: (deviceWidth - 50), height: (deviceWidth/9), justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
+                    <View style={{ width: (deviceWidth - 30), height: 60, borderRadius: ((deviceWidth/9) + 20), borderWidth: 10, borderColor: 'white' }} />
                   </View>
-                  <View style={{
-                      width: (deviceWidth - 50),
-                      height: 40,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      borderRadius: 20,
-                      marginBottom: 10,
-                      justifyContent: 'space-around',
-                      position: 'absolute',
-                      borderWidth: 1,
-                    }}>
+                  <View style={styles.statusList}>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
-                      <Icon name={item.icon} size={20} style={{ marginRight: 5, marginLeft: 6 }} />
+                      <Icon name={item.icon} size={(deviceWidth/17)} style={styles.statusIcon} />
                       <Text style={styles.title}>{item.title}</Text>
                     </View>
                     <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
-                      <Text>{item.qtd}/{item.qtdMax}</Text>
+                      <Text style={styles.title}>{item.qtd}/{item.qtdMax}</Text>
                     </View>
-                    <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 6 }}>
-                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusTen(item.title, item.id)}>
-                      <Icon name='plus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                    <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 3 }}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '+', 10)}>
+                        <Icon name='plus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => PlusOne(item.title, item.id)}>
-                      <Icon name='plus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                      <TouchableOpacity style={styles.statusButton} onPress={() => { AddOrLess(item.title, item.id, '+', 1);}}>
+                        <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusOne(item.title, item.id)}>
-                      <Icon name='minus-box' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 1)}>
+                        <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={{ width: 30, height: 30, justifyContent: 'center', alignItems: 'center',  marginRight: 3  }} onPress={() => MinusTen(item.title, item.id)}>
-                      <Icon name='minus-box-multiple' size={20} style={{ marginRight: 5, marginLeft: 5 }} />
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 10)}>
+                        <Icon name='minus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -310,7 +259,7 @@ function ProfileScreen({ route, navigation }) {
           />
         </View>
         <KeyboardAvoidingView>
-          <Text style={{ alignSelf: 'center', fontSize: (deviceWidth/20), marginTop: 10, fontFamily: 'Righteous_400Regular', color: '#212125' }}>
+          <Text style={{ alignSelf: 'center', fontSize: (deviceWidth/16), marginTop: 10, fontFamily: 'Righteous_400Regular', color: '#212125' }}>
             Descrição do personagem
           </Text>
           <TextInput
@@ -330,7 +279,7 @@ function ProfileScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white'
   },
   editButton: {
     width:30,
@@ -342,12 +291,12 @@ const styles = StyleSheet.create({
   userImage: {
     alignSelf: "center",
     marginTop: 10,
-    width: (deviceWidth - 200),
-    height: (deviceWidth - 200),
-    borderRadius: (deviceWidth - 200)
+    width: (deviceWidth/1.7),
+    height: (deviceWidth/1.7),
+    borderRadius: (deviceWidth/1.7)
   },
   userName: {
-    fontSize: (deviceWidth/ 14),
+    fontSize: (deviceWidth/11),
     alignSelf: "center",
     marginTop: 15,
     fontFamily: 'Righteous_400Regular',
@@ -358,9 +307,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   title: {
-    fontSize: 15,
-    fontWeight: "500",
-    marginTop: 4,
+    fontSize: deviceWidth/24,
+    alignSelf: 'center'
   },
   input: {
     height: 400,
@@ -381,6 +329,49 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'space-between'
+  },
+  statusList: {
+    width: (deviceWidth - 50),
+    height: (deviceWidth/9),
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: (deviceWidth/18),
+    alignContent: 'space-around',
+    marginBottom: (deviceWidth/36),
+    position: 'absolute',
+    borderWidth: 1
+  },
+  statusIcon: {
+    marginRight: 5,
+    marginLeft: 7,
+    alignSelf: 'center'
+  },
+  statusButton: {
+    width: (deviceWidth/14),
+    height: (deviceWidth/14),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 3
+  },
+  statusIconButton: {
+    marginRight: 5,
+    marginLeft: 5
+  },
+  statusListLvl: {
+    width: ((deviceWidth - 60)/ 2),
+    height: (deviceWidth/9),
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 20,
+    alignContent: 'space-around',
+    marginTop: 15,
+    borderWidth: 1
+  },
+  statusLvl: { 
+    alignSelf: 'center', 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    width: (deviceWidth - 50)
   }
 })
 

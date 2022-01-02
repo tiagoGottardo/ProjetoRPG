@@ -17,7 +17,6 @@ function EditProfileScreen({ route, navigation }) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [data, setData] = useState([]);
   const [text, onChangeText] = useState(user[1].name);
-  const isDrawerOpen = useDrawerStatus() === 'closed';
 
   const editTextInput = () => {
     if (text != user[1].name) {
