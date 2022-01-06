@@ -7,6 +7,7 @@ import { Modalize } from 'react-native-modalize';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 
 import NewAttribute from '../components/NewAttribute';
+import Header from '../components/Header';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -81,17 +82,13 @@ function ActionsScreen({ navigation, route }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name='menu' size={deviceWidth/12} color="#fffefe" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
-            Ações
-          </Text>
-          <TouchableOpacity style={styles.editButton} onPress={() => { }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='dice-d20' size={deviceWidth/12} color='#fffefe' />
-          </TouchableOpacity>
-        </View>
+        <Header 
+          iconLeft='bars' 
+          iconRight="dice-d20" 
+          fLeft={() => navigation.openDrawer()} 
+          fRight={() => {}}
+          title="Ações"
+        />
         <Text style={styles.bigTitle}>Modificadores</Text>
         <FlatList
           style={{ alignSelf: 'center', marginBottom: 10, }}

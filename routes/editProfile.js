@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     fontSize: (deviceWidth/ 12),
     fontFamily: 'Righteous_400Regular',
   },
-    titleStatusMax: {
+  titleStatusMax: {
     fontFamily: 'Righteous_400Regular',
     fontSize: (deviceWidth/11),
     marginBottom: 20,

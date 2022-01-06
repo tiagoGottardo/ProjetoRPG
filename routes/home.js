@@ -13,7 +13,6 @@ import ActionsScreen from './actions';
 import ItemsScreen from './items';
 import MapsScreen from './maps';
 
-
 import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs(['VirtualizedLists']);
@@ -57,7 +56,7 @@ export default function HomeScreen({ route }) {
   return (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} extraData={idUser} />}
-        initialRouteName='Ações'
+        initialRouteName='Perfil'
         screenOptions={{
           headerShown: false
         }}

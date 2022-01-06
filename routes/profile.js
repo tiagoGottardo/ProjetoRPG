@@ -7,14 +7,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 
 import { DataContext } from '../components/DataContext';
+import Header from '../components/Header';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
-
-//import { LogBox } from 'react-native';
-
-//LogBox.ignoreLogs(['VirtualizedLists']);
 
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
@@ -122,17 +119,13 @@ function ProfileScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name='menu' size={deviceWidth/12} color="#fffefe" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
-            Perfil
-          </Text>
-          <TouchableOpacity style={styles.editButton} onPress={() => {navigation.navigate('Editar Perfil')}} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='square-edit-outline' size={deviceWidth/12} color='#fffefe' />
-          </TouchableOpacity>
-        </View>
+        <Header 
+          iconLeft='bars' 
+          iconRight="edit" 
+          fLeft={() => navigation.openDrawer()} 
+          fRight={() => navigation.navigate('Editar Perfil')} 
+          title="Perfil"
+        />
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={pickImage}
@@ -241,13 +234,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white'
   },
-  editButton: {
-    width:30,
-    height: 30,
-    backgroundColor:"#212125",
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   userImage: {
     alignSelf: "center",
     marginTop: 10,
@@ -279,15 +265,6 @@ const styles = StyleSheet.create({
     padding: (deviceWidth/36),
     fontSize: (deviceWidth/21.17),
     color: '#212125'
-  },
-  header: {
-    height: (deviceWidth/6),
-    flexDirection: 'row',
-    backgroundColor: '#212125',
-    margin: (deviceWidth/24),
-    borderRadius: (deviceWidth/12),
-    alignItems: 'center',
-    justifyContent: 'space-between'
   },
   statusList: {
     width: (deviceWidth/(36/31)),
