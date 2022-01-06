@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, StyleSheet, FlatList, Platform, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDrawerStatus } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
+
+import { DataContext } from '../components/DataContext';
 
 
 var deviceWidth = Dimensions.get('window').width;
@@ -15,7 +16,7 @@ var deviceHeight = Dimensions.get('window').height;
 
 function EditProfileScreen({ route, navigation }) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
-  const [data, setData] = useState([]);
+  const {data} = useContext(DataContext);
   const [text, onChangeText] = useState(user[1].name);
 
   const editTextInput = () => {
@@ -45,26 +46,7 @@ function EditProfileScreen({ route, navigation }) {
     })
   }
 
-  const getStatus = () => {
-    firebase.firestore().collection(route.params.idUser + 'status').orderBy('id')
-    .get().then((querySnapshot) => {
-      let listStatusObjects = [];
-      querySnapshot.forEach((doc) => {
-        var status = {
-          id: doc.data().id,
-          title: doc.data().title,
-          icon: doc.data().icon,
-          color: doc.data().color,
-          qtd: doc.data().qtd,
-          qtdMax: doc.data().qtdMax,
-        };
-        listStatusObjects.push(status);
-      });
-      setData(listStatusObjects);
-    })
-  }
-
-  const updateStatus = (nameDoc, addOrLess, howMuch) => {
+  const AddOrLess = (nameDoc, howMuch, addOrLess) => {
     if (addOrLess == "+") {
       firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
         qtdMax: firebase.firestore.FieldValue.increment(howMuch)
@@ -76,17 +58,7 @@ function EditProfileScreen({ route, navigation }) {
     }
   }
 
-  const AddOrLess = (nameDoc, i, addOrLess, howMuch) => {
-    if(addOrLess == '+'){
-      setData(prev => prev.map(data => data.id === i ? {...data, qtdMax: data.qtdMax += howMuch} : data));
-    } else {
-      setData(prev => prev.map(data => data.id === i ? {...data, qtdMax: data.qtdMax -= howMuch} : data));
-    }
-    updateStatus(nameDoc, addOrLess, howMuch);
-  }
-
   useEffect(() => {
-    getStatus();
     getUserInfo();
   }, []);
 
@@ -96,19 +68,19 @@ function EditProfileScreen({ route, navigation }) {
         style={styles.container}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-      >
+      > 
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => { navigation.navigate('Perfil'); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name='arrow-left' size={deviceWidth/12} color="#fffefe" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
+            Editar Perfil
+          </Text>
+          <TouchableOpacity style={styles.editButton} onPress={() => { }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
+            <Icon name='' size={deviceWidth/12} color='#fffefe' />
+          </TouchableOpacity>
+        </View>
         <View style={styles.container}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => { navigation.navigate('Perfil') }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name='arrow-left' size={30} color="#fffefe" />
-            </TouchableOpacity>
-            <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
-              Editar Perfil
-            </Text>
-            <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
-              <Icon name='square-edit-outline' size={30} color='#212125' />
-            </TouchableOpacity>
-          </View>
           <View style={styles.status}>
             <Text style={styles.titleStatusMax}>Status Máximo</Text>
             <FlatList
@@ -125,16 +97,16 @@ function EditProfileScreen({ route, navigation }) {
                       <Text style={styles.title}>{item.qtdMax}</Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row-reverse', marginLeft: 3 }}>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '+', 10)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, 10, '+')}>
                         <Icon name='plus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => { AddOrLess(item.title, item.id, '+', 1);}}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => { AddOrLess(item.title, 1, '+');}}>
                         <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 1)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, 1, '-')}>
                         <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 10)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, 10, '-')}>
                         <Icon name='minus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
                     </View>
@@ -144,7 +116,6 @@ function EditProfileScreen({ route, navigation }) {
             />
           </View>
           <KeyboardAvoidingView 
-            behavior={Platform.OS === 'ios' ? "padding" : "height"} 
             style={styles.avoidingView}
           >
             <Text style={styles.nomeLabel}>
@@ -155,8 +126,6 @@ function EditProfileScreen({ route, navigation }) {
               onBlur={editTextInput}
               onChangeText={onChangeText}
               value={text}
-              width={(deviceWidth - 150)}
-              fontSize={(deviceWidth/12)}
             />
           </KeyboardAvoidingView>
         </View>
@@ -170,21 +139,13 @@ const styles = StyleSheet.create({
     flex: 1
   },
   header: {
-    height: 65,
+    height: (deviceWidth/6),
     flexDirection: 'row',
     backgroundColor: '#212125',
-    margin: 15,
-    borderRadius: 100,
+    margin: (deviceWidth/24),
+    borderRadius: (deviceWidth/12),
     alignItems: 'center',
     justifyContent: 'space-between'
-  },
-  input: {
-    height: 40,
-    marginLeft: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: '#212125',
-    fontFamily: 'Righteous_400Regular'
   },
   status: {
     alignItems: 'center',
@@ -218,16 +179,23 @@ const styles = StyleSheet.create({
   nomeLabel: {
     fontFamily: 'Righteous_400Regular',
     fontSize: (deviceWidth/ 12),
-    color: '#212125'
+    color: '#212125',
+    width: (deviceWidth/(36/31)*(1/3))
   },
   avoidingView: {
     flexDirection: 'row',
-    width: (deviceWidth - 50),
-    height: 90, alignItems: 'center',
-    justifyContent: 'center',
+    width: (deviceWidth/(36/31)),
+    height: (deviceWidth/9),
+    alignItems: 'center',
     alignSelf: 'center',
-    borderBottomWidth: 2,
-    paddingTop: Platform.OS === "ios" ? 0 : 50
+    borderBottomWidth: 2
+  },
+  input: {
+    height: (deviceWidth/9),
+    width: (deviceWidth/(36/31)*(2/3)),
+    color: '#212125',
+    fontSize: (deviceWidth/ 12),
+    fontFamily: 'Righteous_400Regular',
   },
     titleStatusMax: {
     fontFamily: 'Righteous_400Regular',

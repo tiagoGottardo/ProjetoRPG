@@ -1,24 +1,26 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 
+import { DataContext } from '../components/DataContext';
+
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 
-import { LogBox } from 'react-native';
+//import { LogBox } from 'react-native';
 
-LogBox.ignoreLogs(['VirtualizedLists']);
+//LogBox.ignoreLogs(['VirtualizedLists']);
 
 var deviceWidth = Dimensions.get('window').width;
 var deviceHeight = Dimensions.get('window').height;
 
 function ProfileScreen({ route, navigation }) {
-  const [data, setData] = useState([]);
+  const {data} = useContext(DataContext);
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [text, onChangeText] = useState(user[4].desc);
 
@@ -49,54 +51,14 @@ function ProfileScreen({ route, navigation }) {
     })
   }
   
-  const getStatus = () => {
-    firebase.firestore().collection(route.params.idUser + 'status').orderBy('id')
-    .get().then((querySnapshot) => {
-      let listStatusObjects = [];
-      querySnapshot.forEach((doc) => {
-        var status = {
-          id: doc.data().id,
-          title: doc.data().title,
-          icon: doc.data().icon,
-          color: doc.data().color,
-          qtd: doc.data().qtd,
-          qtdMax: doc.data().qtdMax,
-        };
-        listStatusObjects.push(status);
-      });
-      setData(listStatusObjects);
-    })
-  }
-
-  const updateStatus = (nameDoc, addOrLess, howMuch) => {
+  const addOrLess = (nameDoc, howMuch, addOrLess, collection) => {
     if (addOrLess == "+") {
-      firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
+      firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
         qtd: firebase.firestore.FieldValue.increment(howMuch)
       });
     } else {
-      firebase.firestore().collection(route.params.idUser + 'status').doc(nameDoc).update({
+      firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
         qtd: firebase.firestore.FieldValue.increment(-howMuch)
-      });
-    }
-  }
-
-  const AddOrLess = (nameDoc, i, addOrLess, howMuch) => {
-    if(addOrLess == '+'){
-      setData(prev => prev.map(data => data.id === i ? {...data, qtd: data.qtd += howMuch} : data));
-    } else {
-      setData(prev => prev.map(data => data.id === i ? {...data, qtd: data.qtd -= howMuch} : data));
-    }
-    updateStatus(nameDoc, addOrLess, howMuch);
-  }
-
-  const addOrLessLvl = (nameDoc, i, addOrLess) => {
-    if (addOrLess == "+") {
-      firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
-        qtd: firebase.firestore.FieldValue.increment(1)
-      });
-    } else {
-      firebase.firestore().collection(route.params.idUser + 'user').doc(nameDoc).update({
-        qtd: firebase.firestore.FieldValue.increment(-1)
       });
     }
   }
@@ -144,10 +106,6 @@ function ProfileScreen({ route, navigation }) {
     getUserInfo();
   }, []);
 
-  const enterScreen = navigation.addListener ('focus', () => {
-    getStatus();
-  })
-
   async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -165,14 +123,14 @@ function ProfileScreen({ route, navigation }) {
         showsHorizontalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name='menu' size={30} color="#fffefe" />
+          <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name='menu' size={deviceWidth/12} color="#fffefe" />
           </TouchableOpacity>
-          <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
+          <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
             Perfil
           </Text>
-          <TouchableOpacity style={styles.editButton} onPress={() => {navigation.navigate('Editar Perfil')}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='square-edit-outline' size={30} color='#fffefe' />
+          <TouchableOpacity style={styles.editButton} onPress={() => {navigation.navigate('Editar Perfil')}} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
+            <Icon name='square-edit-outline' size={deviceWidth/12} color='#fffefe' />
           </TouchableOpacity>
         </View>
         <TapGestureHandler
@@ -188,32 +146,32 @@ function ProfileScreen({ route, navigation }) {
         <View style={styles.statusLvl}>
           <View backgroundColor='#FFD700' style={styles.statusListLvl}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Icon name='star' size={20} style={styles.statusIcon} />
+              <Icon name='star' size={deviceWidth/18} style={styles.statusIcon} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.title}>{user[2].qtd}</Text>
             </View>
             <View style={{ flex: 2, flexDirection: 'row-reverse' }}>
-              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('Nvl', 2, '+')}>
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLess('Nvl', 1, '+', 'user')}>
                 <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('Nvl', 2, '-')}>
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLess('Nvl', 1, '-', 'user')}>
                 <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
             </View>
           </View>
           <View backgroundColor='#F4A460' style={styles.statusListLvl}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
-              <Icon name='fire' size={20} style={styles.statusIcon} />
+              <Icon name='fire' size={deviceWidth/18} style={styles.statusIcon} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.title}>{user[3].qtd}</Text>
             </View>
             <View style={{ flex: 2, flexDirection: 'row-reverse' }}>
-              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('NvlMagia', 3, '+')}>
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLess('NvlMagia', 1, '+', 'user')}>
                 <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLessLvl('NvlMagia', 3, '-')}>
+              <TouchableOpacity style={styles.statusButton} onPress={() => addOrLess('NvlMagia', 1, '-', 'user')}>
                 <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
               </TouchableOpacity>
             </View>
@@ -225,11 +183,11 @@ function ProfileScreen({ route, navigation }) {
             keyExtractor={item => item.id}
             renderItem={({item}) => {
               return(
-                <View style={{ width: (deviceWidth - 50), height: (deviceWidth/9), marginBottom: 10, flexDirection: 'row', borderRadius: 20 }}>
+                <View style={{ width: (deviceWidth/(36/31)), height: (deviceWidth/9), marginBottom: (deviceWidth/30), flexDirection: 'row', borderRadius: (deviceWidth/18) }}>
                   <View style={{ flex: item.qtd, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
                   <View style={{ flex: (item.qtdMax - item.qtd) }}/>
-                  <View style={{ width: (deviceWidth - 50), height: (deviceWidth/9), justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
-                    <View style={{ width: (deviceWidth - 30), height: 60, borderRadius: ((deviceWidth/9) + 20), borderWidth: 10, borderColor: 'white' }} />
+                  <View style={{ width: (deviceWidth/(36/31)), height: (deviceWidth/9), justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
+                    <View style={{ width: (deviceWidth/(36/33)), height: (deviceWidth/6), borderRadius: ((deviceWidth/9) + 20), borderWidth: (deviceWidth/36), borderColor: 'white' }} />
                   </View>
                   <View style={styles.statusList}>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -240,16 +198,16 @@ function ProfileScreen({ route, navigation }) {
                       <Text style={styles.title}>{item.qtd}/{item.qtdMax}</Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row-reverse', marginRight: 3 }}>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '+', 10)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => addOrLess(item.title, 10, '+', 'status')}>
                         <Icon name='plus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => { AddOrLess(item.title, item.id, '+', 1);}}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => { addOrLess(item.title, 1, '+', 'status')}}>
                         <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 1)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => addOrLess(item.title, 1, '-', 'status')}>
                         <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.statusButton} onPress={() => AddOrLess(item.title, item.id, '-', 10)}>
+                      <TouchableOpacity style={styles.statusButton} onPress={() => addOrLess(item.title, 10, '-', 'status')}>
                         <Icon name='minus-box-multiple' size={(deviceWidth/14) - 10} style={styles.statusIconButton} />
                       </TouchableOpacity>
                     </View>
@@ -304,40 +262,39 @@ const styles = StyleSheet.create({
   },
   status: {
     alignItems: 'center',
-    marginTop: 10,
   },
   title: {
     fontSize: deviceWidth/24,
     alignSelf: 'center'
   },
   input: {
-    height: 400,
-    width: (deviceWidth - 60),
-    margin: 20,
+    height: (deviceWidth/0.9),
+    width: (deviceWidth/(36/31)),
+    margin: (deviceWidth/18),
     borderWidth: 3,
     borderColor: '#212125',
     alignSelf: 'center',
-    padding: 10,
-    fontSize: 17,
+    padding: (deviceWidth/36),
+    fontSize: (deviceWidth/21.17),
     color: '#212125'
   },
   header: {
-    height: 65,
+    height: (deviceWidth/6),
     flexDirection: 'row',
     backgroundColor: '#212125',
-    margin: 15,
-    borderRadius: 100,
+    margin: (deviceWidth/24),
+    borderRadius: (deviceWidth/12),
     alignItems: 'center',
     justifyContent: 'space-between'
   },
   statusList: {
-    width: (deviceWidth - 50),
+    width: (deviceWidth/(36/31)),
     height: (deviceWidth/9),
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: (deviceWidth/18),
     alignContent: 'space-around',
-    marginBottom: (deviceWidth/36),
+    marginBottom: (deviceWidth/30),
     position: 'absolute',
     borderWidth: 1
   },
@@ -358,20 +315,21 @@ const styles = StyleSheet.create({
     marginLeft: 5
   },
   statusListLvl: {
-    width: ((deviceWidth - 60)/ 2),
+    width: (((deviceWidth - 20)/(36/31))/ 2),
     height: (deviceWidth/9),
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: deviceWidth/18,
     alignContent: 'space-around',
-    marginTop: 15,
+    marginTop: (deviceWidth/30),
+    marginBottom: (deviceWidth/30),
     borderWidth: 1
   },
   statusLvl: { 
     alignSelf: 'center', 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    width: (deviceWidth - 50)
+    width: (deviceWidth/(36/31))
   }
 })
 

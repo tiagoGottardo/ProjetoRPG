@@ -1,20 +1,22 @@
 import * as React from 'react';
+import {  useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import firebase from 'firebase';
+import 'firebase/firestore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
+
+
 
 function LoginScreen({ navigation }) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errorLogin, setErrorLogin] = React.useState('');
   const [userLog, setUserLog] = React.useState(true);
-
+  
   React.useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        var uid = user.uid;
-        navigation.navigate("Home", { idUser: user.uid })
+        navigation.navigate("Home", { idUser: user.uid });
       } else {
         setUserLog(false)
       }
