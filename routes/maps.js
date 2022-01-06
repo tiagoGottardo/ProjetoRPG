@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, Dimensions, SafeAreaView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import firebase from 'firebase/app';
@@ -134,15 +133,15 @@ function MapsScreen({ navigation, route }) {
         </TouchableOpacity>
       </View>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }}>
-          <Icon name='menu' size={30} color="#fffefe" />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 25, alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
-          Mapas
-        </Text>
-        <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: 65, height: 65, alignItems: 'center', justifyContent: 'center' }} >
-          <Icon name='square-edit-outline' size={30} color='#212125' />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name='menu' size={deviceWidth/12} color="#fffefe" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
+            Mapas
+          </Text>
+          <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
+            <Icon name='' size={deviceWidth/12} color='#fffefe' />
+          </TouchableOpacity>
       </View>
     </View> 
   );
@@ -170,17 +169,17 @@ const styles = StyleSheet.create({
     resizeMode: "cover"
   },
   header: {
-    height: 65,
+    height: (deviceWidth/6),
     flexDirection: 'row',
     backgroundColor: '#212125',
-    margin: 15,
-    borderRadius: 100,
-    alignItems: 'center',
+    borderRadius: (deviceWidth/12),
     justifyContent: 'space-between',
     position: 'absolute',
-    width: (deviceWidth - 30),
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+    marginTop: (deviceWidth/12),
+    width: (deviceWidth - (deviceWidth/12))
+  },
+
 });
 
 
