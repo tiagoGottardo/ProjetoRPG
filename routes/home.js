@@ -13,9 +13,7 @@ import ActionsScreen from './actions';
 import ItemsScreen from './items';
 import MapsScreen from './maps';
 
-
 const Drawer = createDrawerNavigator();
-
 
 export default function HomeScreen({ route }) {
   const { setData } = useContext(DataContext);
@@ -53,7 +51,7 @@ export default function HomeScreen({ route }) {
   return (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} extraData={idUser} />}
-        initialRouteName='Editar Perfil'
+        initialRouteName='Ações'
         screenOptions={{
           headerShown: false
         }}
