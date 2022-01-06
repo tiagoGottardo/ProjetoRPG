@@ -10,16 +10,10 @@ import IconFontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { TextInput } from 'react-native-gesture-handler';
 
 export function DrawerContent(props) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
-  const [data, setData] = useState(['', '', '', '']);
   //props.extraData
-
-  let [fontsLoaded] = useFonts({
-    Righteous_400Regular
-  });
 
   const getUserInfo = () => {
     firebase.firestore().collection(props.extraData + 'user').orderBy('id')
@@ -39,28 +33,8 @@ export function DrawerContent(props) {
     })
   }
 
-  const getStatus = () => {
-    firebase.firestore().collection(props.extraData + 'status').orderBy('id')
-    .onSnapshot((querySnapshot) => {
-      let listStatusObjects = [];
-      querySnapshot.forEach((doc) => {
-        var status = {
-          id: doc.data().id,
-          title: doc.data().title,
-          icon: doc.data().icon,
-          color: doc.data().color,
-          qtd: doc.data().qtd,
-          qtdMax: doc.data().qtdMax,
-        };
-        listStatusObjects.push(status);
-      });
-      setData(listStatusObjects);
-    })
-  }
-
   useEffect(() => {
     getUserInfo();
-    getStatus();
   }, []);
 
   const Logout = () => {
@@ -92,7 +66,7 @@ export function DrawerContent(props) {
             </View>
             <View style={{ flexDirection: 'column' }}>
               <View style={{ marginBottom: 5 }}>
-                <Text style={{ fontFamily: 'Righteous_400Regular', fontSize: 20, color: '#fffefe' }} >{user[1].name}</Text>
+                <Text style={{ fontFamily: 'Righteous_400Regular', fontSize: 20, color: '#fffefe', width: 150 }} >{user[1].name}</Text>
               </View>
               <View style={{ flexDirection: 'row' }}>
                 <Icon name="star" size={ 20 } color='#FFD700' />

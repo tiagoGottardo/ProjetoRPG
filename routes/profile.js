@@ -142,7 +142,9 @@ function ProfileScreen({ route, navigation }) {
             source={{ uri: user[0].uri }}
           />
         </TapGestureHandler>
-        <Text style={styles.userName}>{user[1].name}</Text>
+        <View style={{ width: (deviceWidth/(36/31)), alignSelf: "center", marginTop: 15 }}>
+          <Text style={styles.userName}>{user[1].name}</Text>
+        </View>
         <View style={styles.statusLvl}>
           <View backgroundColor='#FFD700' style={styles.statusListLvl}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -256,9 +258,9 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: (deviceWidth/11),
     alignSelf: "center",
-    marginTop: 15,
     fontFamily: 'Righteous_400Regular',
-    color: '#212125'
+    color: '#212125',
+    textAlign: 'center',
   },
   status: {
     alignItems: 'center',
