@@ -119,11 +119,11 @@ function ProfileScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <Header 
-          iconLeft='bars' 
-          iconRight="edit" 
-          fLeft={() => navigation.openDrawer()} 
-          fRight={() => navigation.navigate('Editar Perfil')} 
+        <Header
+          iconLeft='bars'
+          iconRight='edit'
+          fLeft={() => navigation.openDrawer()}
+          fRight={() => navigation.navigate('Editar Perfil')}
           title="Perfil"
         />
         <TapGestureHandler

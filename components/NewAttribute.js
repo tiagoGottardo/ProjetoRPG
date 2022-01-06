@@ -13,7 +13,7 @@ export default function ({ uid, modalizeRef }) {
     const NewAttribute = (nameDoc, newQtd) => {
         firebase.firestore().collection(uid + 'attributes').doc(nameDoc).set({
             title: nameDoc,
-            qtd: parseInt(newQtd),
+            qtd: parseInt(newQtd)
         })
         setText('');
         setQtd('');
@@ -66,10 +66,11 @@ const styles = StyleSheet.create({
         color: '#212125'
     },
     inputText: {
-        width: 300,
-        marginTop: 10,
+        width: (deviceWidth/(36/30)),
+        marginTop: (deviceWidth/36),
         padding: 10,
-        height: 50,
+        fontSize: (deviceWidth/24),
+        height: (deviceWidth/(36/5)),
         borderBottomWidth: 1,
         borderBottomColor: "#212125",
         marginLeft: "auto",
@@ -77,10 +78,11 @@ const styles = StyleSheet.create({
         color: '#212125'
     },
     inputQtd: {
-        width: 70,
-        marginTop: 10,
+        width: (deviceWidth/(36/7)),
+        marginTop: (deviceWidth/36),
+        fontSize: (deviceWidth/24),
         padding: 10,
-        height: 50,
+        height: (deviceWidth/(36/5)),
         borderBottomWidth: 1,
         borderBottomColor: "#212125",
         marginLeft: "auto",
@@ -88,10 +90,10 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     addButton: {
-        width: 200,
-        marginTop: 10,
+        width: (deviceWidth/(36/20)),
+        marginTop: (deviceWidth/36),
         padding: 10,
-        height: 50,
+        height: (deviceWidth/(36/5)),
         backgroundColor: '#3CB371',
         marginRight: "auto",
         marginLeft: 30,

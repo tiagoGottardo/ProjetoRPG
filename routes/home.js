@@ -8,7 +8,7 @@ import ApiKeys from '../components/ApiKeys';
 import { DataContext } from '../components/DataContext';
 
 import ProfileScreen from './profile';
-import EditProfileScreen from './editProfile'
+import EditProfileScreen from './editProfile';
 import ActionsScreen from './actions';
 import ItemsScreen from './items';
 import MapsScreen from './maps';

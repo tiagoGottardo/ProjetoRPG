@@ -9,6 +9,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 
 import { DataContext } from '../components/DataContext';
+import Header from '../components/Header';
 
 
 var deviceWidth = Dimensions.get('window').width;
@@ -69,17 +70,12 @@ function EditProfileScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       > 
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => { navigation.navigate('Perfil'); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name='arrow-left' size={deviceWidth/12} color="#fffefe" />
-          </TouchableOpacity>
-          <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
-            Editar Perfil
-          </Text>
-          <TouchableOpacity style={styles.editButton} onPress={() => { }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='' size={deviceWidth/12} color='#fffefe' />
-          </TouchableOpacity>
-        </View>
+        <Header 
+          iconLeft='arrow-left'
+          fLeft={() => navigation.navigate('Perfil')} 
+          fRight={() => {}} 
+          title="Perfil"
+        />
         <View style={styles.container}>
           <View style={styles.status}>
             <Text style={styles.titleStatusMax}>Status Máximo</Text>
@@ -115,6 +111,7 @@ function EditProfileScreen({ route, navigation }) {
               }}
             />
           </View>
+          <View style={styles.line} />
           <KeyboardAvoidingView 
             style={styles.avoidingView}
           >
@@ -207,6 +204,12 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginLeft: 7,
     alignSelf: 'center'
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#212125',
+    marginTop: 10,
+    marginBottom: 25
   }
 })
 
