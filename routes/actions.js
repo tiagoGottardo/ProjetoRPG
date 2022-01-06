@@ -3,6 +3,10 @@ import { useEffect, useState, useRef } from 'react';
 import { View, Dimensions, Text, ScrollView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Modalize } from 'react-native-modalize';
+import { TapGestureHandler } from 'react-native-gesture-handler';
+
+import NewAttribute from '../components/NewAttribute';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -11,20 +15,45 @@ var deviceWidth = Dimensions.get('window').width;
 
 function ActionsScreen({ navigation, route }) {
   const [mod, setMod] = useState([]);
+  const [attributes, setAttributes] = useState([]);
+  const modalizeRef = useRef(null);
+
+  const openModalize = () => {
+    modalizeRef.current?.open();
+  }
+
+  const deleteAttribute = (nameDoc) => {
+    firebase.firestore().collection(route.params.idUser + 'attributes').doc(nameDoc).delete()
+  }
 
   const getMod = () => {
     firebase.firestore().collection(route.params.idUser + 'mod').orderBy('id')
     .onSnapshot((querySnapshot) => {
       let listModObjects = [];
       querySnapshot.forEach((doc) => {
-        var mod = {
+        var mods = {
           id: doc.data().id,
           title: doc.data().title,
           qtd: doc.data().qtd,
         };
-        listModObjects.push(mod);
+        listModObjects.push(mods);
       });
       setMod(listModObjects);
+    })
+  }
+
+  const getAttributes = () => {
+    firebase.firestore().collection(route.params.idUser + 'attributes').orderBy('title')
+    .onSnapshot((querySnapshot) => {
+      let listAttObjects = [];
+      querySnapshot.forEach((doc) => {
+        var att = {
+          title: doc.data().title,
+          qtd: doc.data().qtd,
+        };
+        listAttObjects.push(att);
+      });
+      setAttributes(listAttObjects);
     })
   }
 
@@ -42,6 +71,7 @@ function ActionsScreen({ navigation, route }) {
 
   useEffect(() => {
     getMod();
+    getAttributes();
   }, [])
 
   return (
@@ -72,7 +102,7 @@ function ActionsScreen({ navigation, route }) {
               <View style={styles.List}>
                 <View style={styles.container} flexDirection='row'>
                   <Text style={styles.title}>{item.title}</Text>
-                </View>
+                </View>    
                 <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
                   <Text style={styles.title}>{item.qtd}</Text>
                 </View>
@@ -89,6 +119,49 @@ function ActionsScreen({ navigation, route }) {
           }}
         />
         <View style={styles.line} />
+        <Text style={styles.bigTitle} >Atributos</Text>
+        <FlatList
+          style={{ alignSelf: 'center', marginBottom: 10, }}
+          data={attributes}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => {
+            return(
+              <View style={styles.List}>
+                <TapGestureHandler
+                  numberOfTaps={2}
+                  onActivated={() => deleteAttribute(item.title)}
+                >
+                  <View style={styles.container} flexDirection='row'>
+                    <Text style={styles.title}>{item.title}</Text>
+                  </View>
+                </TapGestureHandler>
+                <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
+                  <Text style={styles.title}>{item.qtd}</Text>
+                </View>
+                <View style={{ flex: 1, flexDirection: 'row-reverse', marginLeft: 3 }}>
+                  <TouchableOpacity style={styles.Button} onPress={() => { AddOrLess(item.title, 'attributes', '+');}}>
+                    <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.IconButton} />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.Button} onPress={() => AddOrLess(item.title, 'attributes', '-')}>
+                    <Icon name='minus-box' size={(deviceWidth/14) - 10} style={styles.IconButton} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )
+          }}
+        />
+        <View style={styles.addView}>
+          <TouchableOpacity style={styles.addButton} onPress={() => { openModalize(); }}>
+            <Text style={styles.addText}>Novo Atributo</Text>
+          </TouchableOpacity>
+        </View>
+        <Modalize
+          ref={modalizeRef}
+          snapPoint={220}
+          modalHeight={220}
+        >
+          <NewAttribute uid={route.params.idUser} modalizeRef={modalizeRef} />
+        </Modalize>
       </ScrollView>
     </SafeAreaView>
   );
@@ -103,6 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#212125',
     margin: (deviceWidth/24),
+    marginBottom: 0,
     borderRadius: (deviceWidth/12),
     alignItems: 'center',
     justifyContent: 'space-between'
@@ -111,7 +185,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Righteous_400Regular',
     fontSize: (deviceWidth/11),
     alignSelf: 'center',
-    marginBottom: 20,
+    margin: (deviceWidth/24),
     color: '#212125'
   },
   line: {
@@ -131,7 +205,7 @@ const styles = StyleSheet.create({
     color: '#fffefe'
   },
   List: {
-    width: (deviceWidth - 50),
+    width: (deviceWidth /(36/31)),
     height: (deviceWidth/9),
     flexDirection: 'row',
     alignItems: 'center',
@@ -145,6 +219,25 @@ const styles = StyleSheet.create({
     fontSize: deviceWidth/24,
     alignSelf: 'center',
     color: '#fffefe'
+  },
+  addView: { 
+    width: (deviceWidth), 
+    height: (deviceWidth/6), 
+    backgroundColor: '#3CB371', 
+    alignSelf: 'center', 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  addButton: { 
+    flexDirection: 'row', 
+    width: (deviceWidth/(36/31)), 
+    height: (deviceWidth/9), 
+    justifyContent: 'center' 
+  },
+  addText: { 
+    alignSelf: 'center', 
+    color:'#fffefe', 
+    fontSize: (deviceWidth/18) 
   }
 })
 

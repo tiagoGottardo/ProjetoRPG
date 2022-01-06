@@ -13,6 +13,12 @@ import ActionsScreen from './actions';
 import ItemsScreen from './items';
 import MapsScreen from './maps';
 
+
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['VirtualizedLists']);
+LogBox.ignoreLogs(['Each child in']);
+
 const Drawer = createDrawerNavigator();
 
 export default function HomeScreen({ route }) {
