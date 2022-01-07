@@ -98,7 +98,8 @@ const styles = StyleSheet.create({
         marginRight: "auto",
         marginLeft: 30,
         color: '#212125',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 30
     },
     addText: { 
         alignSelf: 'center', 

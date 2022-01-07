@@ -98,7 +98,7 @@ export default function ({ title, subtitle, description, icon, target_color, mod
                 <TouchableOpacity  style={styles.addButton} disabled={false} onPress={() => { setItem(iTitle, iSubtitle, iDescription, icon, target_color); }}>
                     <Icon name="check-bold" size={30} style={styles.iconButton} />
                 </TouchableOpacity>
-                }  
+                }
             </View>
                  
         </View>
@@ -147,7 +147,8 @@ const styles = StyleSheet.create({
         height: (deviceWidth/(36/5)),
         backgroundColor: '#3CB371',
         color: '#212125',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginBottom: 30
     },
     delButton: {
         width: ((deviceWidth/(36/15))-10),

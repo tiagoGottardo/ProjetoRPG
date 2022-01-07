@@ -165,7 +165,7 @@ function ItemsScreen({ navigation, route }) {
         </View>
         <Modalize
           ref={modalizeRef}
-          snapPoint={deviceHeight/(64/50)}
+          adjustToContentHeight={true}
         >
           <ItemModal 
             title={selectedItem[0]} 
@@ -179,7 +179,7 @@ function ItemsScreen({ navigation, route }) {
         </Modalize>
         <Modalize
           ref={iconModalizeRef}
-          snapPoint={deviceHeight/(64/50)}
+          adjustToContentHeight={true}
         >
           <IconsSelectorModal
             iconModalizeRef={iconModalizeRef.current}

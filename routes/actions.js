@@ -154,8 +154,7 @@ function ActionsScreen({ navigation, route }) {
         </View>
         <Modalize
           ref={modalizeRef}
-          snapPoint={deviceWidth/(36/22)}
-          modalHeight={deviceWidth/(36/22)}
+          adjustToContentHeight={true}
         >
           <NewAttribute uid={route.params.idUser} modalizeRef={modalizeRef} />
         </Modalize>

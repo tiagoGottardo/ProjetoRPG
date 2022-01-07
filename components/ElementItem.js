@@ -23,13 +23,13 @@ export default function ({ title, subtitle, icon, bkg_color, modalizeRef, iconMo
 
   const openEditItem = () => {
     setSelectedItem([title, subtitle, description, icon, target_color]);
-    scrollViewRef?.scrollToEnd({ animated: false })
+    scrollViewRef?.scrollToEnd({ animated: false });
     openModalize()
   }
 
   const openEditIcon = () => {
     setSelectedItem([title, subtitle, description, icon, target_color]);
-    scrollViewRef?.scrollToEnd({ animated: false })
+    scrollViewRef?.scrollToEnd({ animated: false });
     iconModalizeRef?.open();
   }
 
