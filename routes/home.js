@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useContext, useEffect } from 'react';
+import { Dimensions } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import firebase from 'firebase/app';
 
@@ -19,6 +20,9 @@ LogBox.ignoreLogs(['VirtualizedLists']);
 LogBox.ignoreLogs(['Each child in']);
 
 const Drawer = createDrawerNavigator();
+
+const deviceWidth = Dimensions.get('window').width;
+
 
 export default function HomeScreen({ route }) {
   const { setData } = useContext(DataContext);
@@ -58,6 +62,10 @@ export default function HomeScreen({ route }) {
         drawerContent={(props) => <DrawerContent {...props} extraData={idUser} />}
         initialRouteName='Itens'
         screenOptions={{
+          drawerType: "slide",
+          drawerStyle: {
+            width: (deviceWidth/(36/28)),
+          },
           headerShown: false
         }}
       >
