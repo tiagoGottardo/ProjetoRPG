@@ -84,7 +84,7 @@ function ActionsScreen({ navigation, route }) {
       >
         <Header 
           iconLeft='bars' 
-          iconRight="dice-d20" 
+          iconRight="dice-d20"
           fLeft={() => navigation.openDrawer()} 
           fRight={() => {}}
           title="Ações"
@@ -93,13 +93,13 @@ function ActionsScreen({ navigation, route }) {
         <FlatList
           style={{ alignSelf: 'center', marginBottom: 10, }}
           data={mod}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.title}
           renderItem={({item}) => {
             return(
               <View style={styles.List}>
                 <View style={styles.container} flexDirection='row'>
                   <Text style={styles.title}>{item.title}</Text>
-                </View>    
+                </View>
                 <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
                   <Text style={styles.title}>{item.qtd}</Text>
                 </View>
@@ -154,8 +154,8 @@ function ActionsScreen({ navigation, route }) {
         </View>
         <Modalize
           ref={modalizeRef}
-          snapPoint={220}
-          modalHeight={220}
+          snapPoint={deviceWidth/(36/22)}
+          modalHeight={deviceWidth/(36/22)}
         >
           <NewAttribute uid={route.params.idUser} modalizeRef={modalizeRef} />
         </Modalize>

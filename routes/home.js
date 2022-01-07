@@ -56,7 +56,7 @@ export default function HomeScreen({ route }) {
   return (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} extraData={idUser} />}
-        initialRouteName='Perfil'
+        initialRouteName='Itens'
         screenOptions={{
           headerShown: false
         }}

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {  useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import firebase from 'firebase';
 import 'firebase/firestore';
