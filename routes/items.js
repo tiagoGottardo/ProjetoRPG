@@ -8,6 +8,7 @@ import { Modalize } from 'react-native-modalize';
 import Header from '../components/Header';
 import ElementItem from '../components/ElementItem';
 import ItemModal from '../components/ItemModal';
+import IconsSelectorModal from '../components/IconsSelectorModal';
 import { SelectedItemContext } from '../components/SelectedItemContext';
 
 import firebase from 'firebase/app';
@@ -22,6 +23,7 @@ function ItemsScreen({ navigation, route }) {
   const [homeItems, setHomeItems] = useState([]);
   const { selectedItem, setSelectedItem } = useContext(SelectedItemContext);
   const modalizeRef = useRef(null);
+  const iconModalizeRef = useRef(null);
   const scrollViewRef = useRef(null);
 
   const openModalize = () => {
@@ -95,6 +97,7 @@ function ItemsScreen({ navigation, route }) {
                 subtitle={item.subtitle} 
                 bkg_color='#212125' 
                 modalizeRef={modalizeRef.current}  
+                iconModalizeRef={iconModalizeRef.current}
                 description={item.description} 
                 target_color={item.target_color} 
                 scrollViewRef={scrollViewRef.current} 
@@ -120,6 +123,7 @@ function ItemsScreen({ navigation, route }) {
                 subtitle={item.subtitle} 
                 bkg_color='#212125' 
                 modalizeRef={modalizeRef.current}  
+                iconModalizeRef={iconModalizeRef.current}
                 description={item.description} 
                 target_color={item.target_color} 
                 scrollViewRef={scrollViewRef.current} 
@@ -144,7 +148,8 @@ function ItemsScreen({ navigation, route }) {
                 title={item.title} 
                 subtitle={item.subtitle} 
                 bkg_color='#212125' 
-                modalizeRef={modalizeRef.current}  
+                modalizeRef={modalizeRef.current}
+                iconModalizeRef={iconModalizeRef.current}
                 description={item.description} 
                 target_color={item.target_color} 
                 scrollViewRef={scrollViewRef.current} 
@@ -170,6 +175,16 @@ function ItemsScreen({ navigation, route }) {
             target_color={selectedItem[4]} 
             modalizeRef={modalizeRef.current} 
             uid={route.params.idUser} 
+          />
+        </Modalize>
+        <Modalize
+          ref={iconModalizeRef}
+          snapPoint={deviceHeight/(64/50)}
+        >
+          <IconsSelectorModal
+            iconModalizeRef={iconModalizeRef.current}
+            title={selectedItem[0]}
+            uid={route.params.idUser}
           />
         </Modalize>
       </ScrollView>

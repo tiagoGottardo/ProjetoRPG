@@ -13,7 +13,7 @@ var deviceWidth = Dimensions.get('window').width;
 const color_primary = "#212125"
 const color_secondary = '#fffefe'
 
-export default function ({ title, subtitle, icon, bkg_color, modalizeRef, target_color, description, scrollViewRef, uid }) {
+export default function ({ title, subtitle, icon, bkg_color, modalizeRef, iconModalizeRef, target_color, description, scrollViewRef, uid }) {
   const { setSelectedItem } = useContext(SelectedItemContext);
 
 
@@ -25,6 +25,12 @@ export default function ({ title, subtitle, icon, bkg_color, modalizeRef, target
     setSelectedItem([title, subtitle, description, icon, target_color]);
     scrollViewRef?.scrollToEnd({ animated: false })
     openModalize()
+  }
+
+  const openEditIcon = () => {
+    setSelectedItem([title, subtitle, description, icon, target_color]);
+    scrollViewRef?.scrollToEnd({ animated: false })
+    iconModalizeRef?.open();
   }
 
   const upItem = (nameDoc, lTarget_color) => {
@@ -53,7 +59,7 @@ export default function ({ title, subtitle, icon, bkg_color, modalizeRef, target
 
   return(
       <View style={styles.List} backgroundColor={bkg_color} >
-        <TouchableOpacity style={styles.ButtonLeft} onPress={() => { }}>
+        <TouchableOpacity style={styles.ButtonLeft} onPress={() => { openEditIcon(); }}>
           <Icon name={icon} size={(deviceWidth/12) - 10} style={styles.IconButton} />
         </TouchableOpacity>
         <TapGestureHandler
