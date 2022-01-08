@@ -9,7 +9,7 @@ import ApiKeys from '../components/ApiKeys';
 import { DataContext } from '../components/DataContext';
 
 import ProfileScreen from './profile';
-import EditProfileScreen from './editProfile';
+import MagicsScreen from './magics';
 import ActionsScreen from './actions';
 import ItemsScreen from './items';
 import MapsScreen from './maps';
@@ -60,7 +60,7 @@ export default function HomeScreen({ route }) {
   return (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} extraData={idUser} />}
-        initialRouteName='Itens'
+        initialRouteName='Magias'
         screenOptions={{
           drawerType: "slide",
           drawerStyle: {
@@ -73,7 +73,7 @@ export default function HomeScreen({ route }) {
         <Drawer.Screen name="Ações" component={ActionsScreen} initialParams={{ idUser: idUser }} />
         <Drawer.Screen name="Itens" component={ItemsScreen} initialParams={{ idUser: idUser }} />
         <Drawer.Screen name="Mapas" component={MapsScreen} initialParams={{ idUser: idUser }} />
-        <Drawer.Screen name="Editar Perfil" component={EditProfileScreen} initialParams={{ idUser: idUser }} options={{ swipeEnabled: false }}/>
+        <Drawer.Screen name="Magias" component={MagicsScreen} initialParams={{ idUser: idUser }} />
       </Drawer.Navigator>
   );
 }

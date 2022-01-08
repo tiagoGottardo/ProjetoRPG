@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState, useContext } from 'react';
-import { Button, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,12 +20,31 @@ function ProfileScreen({ route, navigation }) {
   const {data} = useContext(DataContext);
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [text, onChangeText] = useState(user[4].desc);
+  const [nameSelected, setNameSelected] = useState(false);
+  const [statusSelected, setStatusSelected] = useState(false);
+  const [nameInput, onChangeName] = useState('');
 
   const editTextInput = () => {
     if (text != user[4].desc) {
       firebase.firestore().collection(route.params.idUser + 'user').doc('Descricao').update({
         desc: text
       })
+    }
+  }
+
+  const editNameInput = () => {
+    if (nameInput != user[1].name) {
+      firebase.firestore().collection(route.params.idUser + 'user').doc('Nome').update({
+        name: nameInput
+      })
+    }
+    setNameSelected(false);
+  }
+
+  const flopStatusSelected = () => {
+    switch (statusSelected) {
+      case false: setStatusSelected(true); break;
+      case true: setStatusSelected(false); break;
     }
   }
 
@@ -44,20 +63,34 @@ function ProfileScreen({ route, navigation }) {
         listInfoObjects.push(userInfo);
       });
       onChangeText(listInfoObjects[4].desc);
+      onChangeName(listInfoObjects[1].name);
       setUser(listInfoObjects);
     })
   }
   
   const addOrLess = (nameDoc, howMuch, addOrLess, collection) => {
-    if (addOrLess == "+") {
-      firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
-        qtd: firebase.firestore.FieldValue.increment(howMuch)
-      });
+    if (statusSelected == false || collection == 'user') {
+      if (addOrLess == "+") {
+        firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
+          qtd: firebase.firestore.FieldValue.increment(howMuch)
+        });
+      } else {
+        firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
+          qtd: firebase.firestore.FieldValue.increment(-howMuch)
+        });
+      }
     } else {
-      firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
-        qtd: firebase.firestore.FieldValue.increment(-howMuch)
-      });
+      if (addOrLess == "+") {
+        firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
+          qtdMax: firebase.firestore.FieldValue.increment(howMuch)
+        });
+      } else {
+        firebase.firestore().collection(route.params.idUser + collection).doc(nameDoc).update({
+          qtdMax: firebase.firestore.FieldValue.increment(-howMuch)
+        });
+      }
     }
+    
   }
 
   const pickImage = async () => {
@@ -121,9 +154,9 @@ function ProfileScreen({ route, navigation }) {
       >
         <Header
           iconLeft='bars'
-          iconRight='edit'
+          iconRight='dice-d20'
           fLeft={() => navigation.openDrawer()}
-          fRight={() => navigation.navigate('Editar Perfil')}
+          fRight={() => {}}
           title="Perfil"
         />
         <TapGestureHandler
@@ -135,9 +168,24 @@ function ProfileScreen({ route, navigation }) {
             source={{ uri: user[0].uri }}
           />
         </TapGestureHandler>
-        <View style={{ width: (deviceWidth/(36/31)), alignSelf: "center", marginTop: 15 }}>
-          <Text style={styles.userName}>{user[1].name}</Text>
-        </View>
+          {nameSelected == false
+            ?
+            <TapGestureHandler
+              numberOfTaps={2}
+              onActivated={() => setNameSelected(true)}
+            >
+              <KeyboardAvoidingView style={{ width: (deviceWidth/(36/31)), alignSelf: "center", marginVertical: 15}}>
+                <Text style={styles.userName}>{user[1].name}</Text>
+              </KeyboardAvoidingView>
+            </TapGestureHandler>
+            :
+            <TextInput
+              style={styles.inputName}
+              onBlur={editNameInput}
+              onChangeText={onChangeName}
+              value={nameInput}
+            />
+          }
         <View style={styles.statusLvl}>
           <View backgroundColor='#FFD700' style={styles.statusListLvl}>
             <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -185,10 +233,15 @@ function ProfileScreen({ route, navigation }) {
                     <View style={{ width: (deviceWidth/(36/33)), height: (deviceWidth/6), borderRadius: ((deviceWidth/9) + 20), borderWidth: (deviceWidth/36), borderColor: 'white' }} />
                   </View>
                   <View style={styles.statusList}>
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                      <Icon name={item.icon} size={(deviceWidth/17)} style={styles.statusIcon} />
-                      <Text style={styles.title}>{item.title}</Text>
-                    </View>
+                    <TapGestureHandler
+                      numberOfTaps={2}
+                      onActivated={flopStatusSelected}
+                    >
+                      <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <Icon name={item.icon} size={(deviceWidth/17)} style={styles.statusIcon} />
+                        <Text style={styles.title}>{item.title}</Text>
+                      </View>
+                    </TapGestureHandler>
                     <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
                       <Text style={styles.title}>{item.qtd}/{item.qtdMax}</Text>
                     </View>
@@ -237,9 +290,11 @@ const styles = StyleSheet.create({
   userImage: {
     alignSelf: "center",
     marginTop: 10,
-    width: (deviceWidth/1.7),
-    height: (deviceWidth/1.7),
-    borderRadius: (deviceWidth/1.7)
+    width: (deviceWidth/(36/20)),
+    height: (deviceWidth/(36/20)),
+    borderRadius: (deviceWidth/(36/4)),
+    borderWidth: 2,
+    borderColor: '#212125'
   },
   userName: {
     fontSize: (deviceWidth/11),
@@ -264,7 +319,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: (deviceWidth/36),
     fontSize: (deviceWidth/21.17),
-    color: '#212125'
+    color: '#212125',
+    textAlignVertical: 'top'
   },
   statusList: {
     width: (deviceWidth/(36/31)),
@@ -309,6 +365,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     width: (deviceWidth/(36/31))
+  },
+  inputName: {
+    marginVertical: 15,
+    height: (deviceWidth/9),
+    width: (deviceWidth/(36/31)),
+    alignSelf: 'center',
+    color: '#212125',
+    fontSize: (deviceWidth/ 11),
+    fontFamily: 'Righteous_400Regular',
+    textAlign: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#212125'
   }
 })
 

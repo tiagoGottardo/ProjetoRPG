@@ -64,7 +64,7 @@ export function DrawerContent(props) {
           </View>
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 15 }}>
             <View style={{ marginRight: 15 }}> 
-              <Image source={{ uri: user[0].uri }} style={{ width: (deviceWidth/(36/6)), height: (deviceWidth/(36/6)), borderRadius: (deviceWidth/(36/3)) }} />
+              <Image source={{ uri: user[0].uri }} style={{ width: (deviceWidth/(36/6)), height: (deviceWidth/(36/6)), borderRadius: (deviceWidth/(36/(6/5))), borderWidth: 1, borderColor: '#fffefe' }} />
             </View>
             <View style={{ flexDirection: 'column' }}>
               <View style={{ marginBottom: 5 }}>
@@ -114,7 +114,7 @@ export function DrawerContent(props) {
                 )}  
                 label='Magias'
                 labelStyle={styles.labels}
-                onPress={() => {}}
+                onPress={() => {props.navigation.navigate('Magias');}}
                 style={{ borderBottomWidth: 0.5, borderBottomColor: '#CDC9C9', borderRadius: 0 }}
               />
               <DrawerItem 
