@@ -91,7 +91,7 @@ function ActionsScreen({ navigation, route }) {
         />
         <Text style={styles.bigTitle}>Modificadores</Text>
         <FlatList
-          style={{ alignSelf: 'center', marginBottom: 10, }}
+          style={{ alignSelf: 'center', marginBottom: 10 }}
           data={mod}
           keyExtractor={item => item.title}
           renderItem={({item}) => {
@@ -208,7 +208,8 @@ const styles = StyleSheet.create({
     borderRadius: (deviceWidth/18),
     alignContent: 'space-around',
     marginBottom: (deviceWidth/36),
-    backgroundColor: '#212125'
+    backgroundColor: '#212125',
+    elevation: 3
   },
   title: {
     marginLeft: 12,

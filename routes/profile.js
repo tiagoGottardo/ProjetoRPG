@@ -58,7 +58,8 @@ function ProfileScreen({ route, navigation }) {
           name: doc.data().name,
           qtd: doc.data().qtd,
           uri: doc.data().uri,
-          desc: doc.data().desc
+          desc: doc.data().desc,
+          permission: doc.data().map
         };
         listInfoObjects.push(userInfo);
       });
@@ -229,7 +230,7 @@ function ProfileScreen({ route, navigation }) {
                 <View style={{ width: (deviceWidth/(36/31)), height: (deviceWidth/9), marginBottom: (deviceWidth/30), flexDirection: 'row', borderRadius: (deviceWidth/18) }}>
                   <View style={{ flex: item.qtd, backgroundColor: item.color, alignItems: 'center', justifyContent: 'center' }} />
                   <View style={{ flex: (item.qtdMax - item.qtd) }}/>
-                  <View style={{ width: (deviceWidth/(36/31)), height: (deviceWidth/9), justifyContent: 'center', alignItems: 'center', position: 'absolute'}}>
+                  <View style={{ width: (deviceWidth/(36/31)), height: (deviceWidth/9), justifyContent: 'center', alignItems: 'center', position: 'absolute' }}>
                     <View style={{ width: (deviceWidth/(36/33)), height: (deviceWidth/6), borderRadius: ((deviceWidth/9) + 20), borderWidth: (deviceWidth/36), borderColor: 'white' }} />
                   </View>
                   <View style={styles.statusList}>
@@ -301,14 +302,14 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontFamily: 'Righteous_400Regular',
     color: '#212125',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   status: {
-    alignItems: 'center',
+    alignItems: 'center'
   },
   title: {
     fontSize: deviceWidth/24,
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   input: {
     height: (deviceWidth/0.9),

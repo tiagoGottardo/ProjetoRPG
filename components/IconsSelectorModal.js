@@ -7,7 +7,7 @@ import 'firebase/firestore';
 
 var deviceWidth = Dimensions.get('window').width;
 
-export default function ({ title, iconModalizeRef, uid }) {
+export default function ({ title, iconModalizeRef, uid, col }) {
     const [icons, setIcons] = useState([]);
 
     const getIcons = () => {
@@ -25,7 +25,8 @@ export default function ({ title, iconModalizeRef, uid }) {
     }
 
     const editIcon = (iconSelected) => {
-        firebase.firestore().collection(uid + 'items').doc(title).update({
+        console.log(uid, col, title);
+        firebase.firestore().collection(uid + col).doc(title).update({
             icon: iconSelected
         })
         iconModalizeRef?.close()
@@ -37,7 +38,7 @@ export default function ({ title, iconModalizeRef, uid }) {
 
     return(
         <View style={styles.container}>
-            <Text style={styles.bigTitle}>Trocar Icon</Text>
+            <Text style={styles.bigTitle}>Icons</Text>
             <FlatList
                 style={{ alignSelf: 'center', marginBottom: (deviceWidth/(36/1)), width: (deviceWidth/(36/32))}}
                 data={icons}

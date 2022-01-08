@@ -49,17 +49,14 @@ export function DrawerContent(props) {
   }
 
   return(
-    <SafeAreaView style={{ flex:1 }}>
-      <View style={{ flex:1 }}>
-        <View style={{
+  <View style={{ flex: 1}}>
+    <View style={{
           backgroundColor: '#212125',
           justifyContent: 'center', 
-          height: (deviceWidth/(36/18)),
-          margin: (deviceWidth/(36/1)),
+          height: (deviceWidth/(36/20)),
           marginTop: 0,
-          borderRadius: (deviceWidth/(36/1))
         }}>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' }}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', marginTop: (deviceWidth/(36/2)) }}>
             <Text style={{ color: '#fffefe', fontSize: (deviceWidth/10), fontFamily: 'Righteous_400Regular' }}>Projeto RPG</Text> 
           </View>
           <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 15 }}>
@@ -79,7 +76,9 @@ export function DrawerContent(props) {
             </View>
           </View>
         </View>
-        <DrawerContentScrollView {...props} style={{ borderTopWidth: 0.5, borderTopColor: '#CDC9C9' }}>
+    <SafeAreaView style={{ flex:1 }}>
+      <View style={{ flex:1 }}>
+        <DrawerContentScrollView {...props} style={{ marginTop: -25 }}>
             <Drawer.Section>
               <DrawerItem 
                 icon={() => (
@@ -88,7 +87,7 @@ export function DrawerContent(props) {
                 label='Perfil'
                 labelStyle={styles.labels}
                 onPress={() => {props.navigation.navigate('Perfil');}}
-                style={{ borderBottomWidth: 0.5, borderBottomColor: '#CDC9C9', borderRadius: 0, marginTop: -20 }}
+                style={{ borderBottomWidth: 0.5, borderBottomColor: '#CDC9C9', borderRadius: 0, marginTop: -25 }}
               />
               <DrawerItem 
                 icon={() => (
@@ -139,7 +138,7 @@ export function DrawerContent(props) {
                 icon={() => (
                   <Icon name="logout-variant" size={ (deviceWidth/(36/3)) } color='#212125' />
                 )}  
-                label='Logout'
+                label='Sair'
                 labelStyle={styles.labels}
                 onPress={Logout}
                 style={{ borderRadius: 0 }}
@@ -148,6 +147,7 @@ export function DrawerContent(props) {
         </DrawerContentScrollView>
       </View>
     </SafeAreaView>
+  </View>
   );
 }
 

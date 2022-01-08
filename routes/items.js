@@ -24,7 +24,6 @@ function ItemsScreen({ navigation, route }) {
   const { selectedItem, setSelectedItem } = useContext(SelectedItemContext);
   const modalizeRef = useRef(null);
   const iconModalizeRef = useRef(null);
-  const scrollViewRef = useRef(null);
 
   const openModalize = () => {
     modalizeRef.current?.open();
@@ -32,7 +31,6 @@ function ItemsScreen({ navigation, route }) {
 
   const newItem = () => {
     setSelectedItem(['', '', '', '', '']);
-    scrollViewRef.current?.scrollToEnd({ animated: false })
     openModalize();
   }
 
@@ -72,7 +70,6 @@ function ItemsScreen({ navigation, route }) {
         style={styles.container}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        ref={scrollViewRef}
       >
         <Header 
           iconLeft='bars' 
@@ -99,8 +96,7 @@ function ItemsScreen({ navigation, route }) {
                 modalizeRef={modalizeRef.current}  
                 iconModalizeRef={iconModalizeRef.current}
                 description={item.description} 
-                target_color={item.target_color} 
-                scrollViewRef={scrollViewRef.current} 
+                target_color={item.target_color}
                 uid={route.params.idUser} 
               />
             )
@@ -125,8 +121,7 @@ function ItemsScreen({ navigation, route }) {
                 modalizeRef={modalizeRef.current}  
                 iconModalizeRef={iconModalizeRef.current}
                 description={item.description} 
-                target_color={item.target_color} 
-                scrollViewRef={scrollViewRef.current} 
+                target_color={item.target_color}
                 uid={route.params.idUser} 
               />
             )
@@ -151,8 +146,7 @@ function ItemsScreen({ navigation, route }) {
                 modalizeRef={modalizeRef.current}
                 iconModalizeRef={iconModalizeRef.current}
                 description={item.description} 
-                target_color={item.target_color} 
-                scrollViewRef={scrollViewRef.current} 
+                target_color={item.target_color}
                 uid={route.params.idUser} 
               />
             )
@@ -186,6 +180,7 @@ function ItemsScreen({ navigation, route }) {
             iconModalizeRef={iconModalizeRef.current}
             title={selectedItem[0]}
             uid={route.params.idUser}
+            collection="items"
           />
         </Modalize>
     </SafeAreaView>

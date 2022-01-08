@@ -113,7 +113,8 @@ const styles = StyleSheet.create({
     borderRadius: (deviceWidth/14),
     marginBottom: (deviceWidth/36),
     borderWidth: 1,
-    borderColor: color_primary
+    borderColor: color_primary,
+    elevation: 5
   },
   title: {
     marginLeft: 12,
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     fontSize: deviceWidth/30,
     color: color_secondary,
+    marginBottom: (deviceWidth/140)
   },
   itemBox: {
     flex: 8,
