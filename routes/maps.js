@@ -14,13 +14,28 @@ var deviceHeight = Dimensions.get('window').height;
 
 function MapsScreen({ navigation, route }) {
   const [data, setData] = useState([]);
+  const [mapPermission, setMapPermission] = useState(false);
+
+  const getMapPermission = () => {
+    firebase.firestore().collection(route.params.idUser + 'user').orderBy('id')
+    .onSnapshot((querySnapshot) => {
+      let listInfoObjects = [];
+      querySnapshot.forEach((doc) => {
+        var userInfo = {
+          id: doc.data().id,
+          permission: doc.data().map
+        };
+        listInfoObjects.push(userInfo);
+      });
+      setMapPermission(listInfoObjects[5].permission)
+    })
+  }
 
   const getMaps = () => {
     firebase.firestore()
-    .collection(route.params.idUser + 'maps')
+    .collection('maps')
     .orderBy('name')
-    .get()
-    .then((snapshot) => {
+    .onSnapshot((snapshot) => {
       let listMapObjects = [];
           snapshot.forEach((doc) => {
           const map = {
@@ -32,34 +47,30 @@ function MapsScreen({ navigation, route }) {
         });
         setData(listMapObjects);
     })
-    .catch((e) => {
-      console.log(e);
-    });
   }
 
     function addRegistryMap(mapName, mapUri) {
 
       firebase.firestore()
-      .collection(route.params.idUser + 'maps')
+      .collection('maps')
       .add({
         name: mapName,
         uri: mapUri
       });
-      getMaps();
     }
 
     function delRegistryMap(mapId, mapName) {
       firebase.storage().ref().child("images").child(mapName).delete()
       firebase.firestore()
-      .collection(route.params.idUser + 'maps')
+      .collection('maps')
       .doc(mapId)
       .delete();
       alert("You image was deleted!")
-      getMaps();
     }
 
   useEffect(() => {
     getMaps();
+    getMapPermission();
     (async () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -97,7 +108,6 @@ function MapsScreen({ navigation, route }) {
       var refMap = firebase.storage().ref().child("images").child(mapName).put(blob).then(() => {
         firebase.storage().ref().child("images").child(mapName).getDownloadURL().then((url_image) => {
           addRegistryMap(mapName, url_image);
-          getMaps();
         });
         
       });
@@ -114,24 +124,34 @@ function MapsScreen({ navigation, route }) {
             renderItem={({item}) => {
               return (
                 <View style={styles.container}>
+                  {mapPermission == true
+                  ?
                   <TapGestureHandler
-                    numberOfTaps={2}
-                    onActivated={() => {
-                      delRegistryMap(item.id, item.name)
-                    }}
+                  numberOfTaps={2}
+                  onActivated={() => {
+                    delRegistryMap(item.id, item.name)
+                  }}
                   >
                     <Image source={{ uri: item.uri }} style={styles.imageBackground} />
                   </TapGestureHandler>
-                    
+                  :
+                  <Image source={{ uri: item.uri }} style={styles.imageBackground} />
+                  }
+                  
                 </View>
             )}}
             showsHorizontalScrollIndicator={false}
           />
+      {mapPermission == true
+      ?
       <View style={styles.viewButton} >
         <TouchableOpacity style={styles.addImageButton} onPress={pickImage} >
-        <Icon name='folder-plus' size={deviceWidth/15} color='#fffefe' />
+          <Icon name='folder-plus' size={deviceWidth/15} color='#fffefe' />
         </TouchableOpacity>
       </View>
+      :
+      <View />
+      }
       <View style={styles.header}>
           <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
             <Icon name='bars' size={deviceWidth/15} color="#fffefe" />
@@ -140,7 +160,7 @@ function MapsScreen({ navigation, route }) {
             Mapas
           </Text>
           <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='' size={deviceWidth/15} color='#fffefe' />
+            <Icon name='dice-d20' size={deviceWidth/15} color='#fffefe' />
           </TouchableOpacity>
       </View>
     </View> 
