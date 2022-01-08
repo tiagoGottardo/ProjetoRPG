@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, Dimensions, SafeAreaView } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -129,18 +129,18 @@ function MapsScreen({ navigation, route }) {
           />
       <View style={styles.viewButton} >
         <TouchableOpacity style={styles.addImageButton} onPress={pickImage} >
-        <Icon name='image-plus' size={20} color='#fffefe' />
+        <Icon name='folder-plus' size={deviceWidth/15} color='#fffefe' />
         </TouchableOpacity>
       </View>
       <View style={styles.header}>
           <TouchableOpacity onPress={() => { navigation.openDrawer(); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name='menu' size={deviceWidth/12} color="#fffefe" />
+            <Icon name='bars' size={deviceWidth/15} color="#fffefe" />
           </TouchableOpacity>
           <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
             Mapas
           </Text>
           <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
-            <Icon name='' size={deviceWidth/12} color='#fffefe' />
+            <Icon name='' size={deviceWidth/15} color='#fffefe' />
           </TouchableOpacity>
       </View>
     </View> 
