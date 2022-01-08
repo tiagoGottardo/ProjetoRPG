@@ -147,7 +147,8 @@ function ActionsScreen({ navigation, route }) {
             )
           }}
         />
-        <View style={styles.addView}>
+      </ScrollView>
+      <View style={styles.addView}>
           <TouchableOpacity style={styles.addButton} onPress={() => { openModalize(); }}>
             <Text style={styles.addText}>Novo Atributo</Text>
           </TouchableOpacity>
@@ -158,7 +159,6 @@ function ActionsScreen({ navigation, route }) {
         >
           <NewAttribute uid={route.params.idUser} modalizeRef={modalizeRef} />
         </Modalize>
-      </ScrollView>
     </SafeAreaView>
   );
 }

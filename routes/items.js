@@ -158,7 +158,8 @@ function ItemsScreen({ navigation, route }) {
             )
           }}
         />
-        <View style={styles.addView}>
+      </ScrollView>
+      <View style={styles.addView}>
           <TouchableOpacity style={styles.addButton} onPress={() => { newItem(); }}>
             <Text style={styles.addText}>Novo Item</Text>
           </TouchableOpacity>
@@ -187,7 +188,6 @@ function ItemsScreen({ navigation, route }) {
             uid={route.params.idUser}
           />
         </Modalize>
-      </ScrollView>
     </SafeAreaView>
   );
 }
