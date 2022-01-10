@@ -8,6 +8,7 @@ import { Modalize } from 'react-native-modalize';
 import Header from '../components/Header';
 import ElementItem from '../components/ElementItem';
 import ItemModal from '../components/ItemModal';
+import Dice from '../components/Dice';
 import IconsSelectorModal from '../components/IconsSelectorModal';
 import { SelectedItemContext } from '../components/SelectedItemContext';
 
@@ -24,6 +25,7 @@ function ItemsScreen({ navigation, route }) {
   const { selectedItem, setSelectedItem } = useContext(SelectedItemContext);
   const modalizeRef = useRef(null);
   const iconModalizeRef = useRef(null);
+  const diceModalizeRef = useRef(null);
 
   const openModalize = () => {
     modalizeRef.current?.open();
@@ -75,7 +77,7 @@ function ItemsScreen({ navigation, route }) {
           iconLeft='bars' 
           iconRight="dice-d20"
           fLeft={() => navigation.openDrawer()} 
-          fRight={() => {}}
+          fRight={() => { diceModalizeRef.current?.open(); }}
           title="Itens"
         />
         <View style={styles.listView}>
@@ -182,6 +184,12 @@ function ItemsScreen({ navigation, route }) {
             uid={route.params.idUser}
             collection="items"
           />
+        </Modalize>
+        <Modalize
+          ref={diceModalizeRef}
+          snapPoint={deviceHeight}
+        >
+          <Dice uid={route.params.idUser} />
         </Modalize>
     </SafeAreaView>
   );

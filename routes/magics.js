@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState, useContext, useRef } from 'react';
-import { TouchableOpacity, View, Text, TextInput, KeyboardAvoidingView, StyleSheet, FlatList, Platform, ScrollView, Dimensions } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, FlatList, ScrollView, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Modalize } from 'react-native-modalize';
 
 import firebase from 'firebase/app';
@@ -15,6 +14,7 @@ import ElementMagic from '../components/ElementMagic';
 import MagicModal from '../components/MagicModal';
 import { SelectedMagicContext } from '../components/SelectedMagicContext';
 import IconsSelectorModal from '../components/IconsSelectorModal';
+import Dice from '../components/Dice';
 
 
 var deviceWidth = Dimensions.get('window').width;
@@ -25,6 +25,8 @@ function MagicsScreen({ route, navigation }) {
   const {selectedMagic, setSelectedMagic} = useContext(SelectedMagicContext);
   const modalizeRef = useRef(null);
   const iconModalizeRef = useRef(null);
+  const diceModalizeRef = useRef(null);
+
 
   const openModalize = () => {
     modalizeRef.current?.open();
@@ -67,7 +69,7 @@ function MagicsScreen({ route, navigation }) {
           iconLeft='bars'
           iconRight='dice-d20'
           fLeft={() => navigation.openDrawer()} 
-          fRight={() => { }} 
+          fRight={() => { diceModalizeRef.current?.open(); }} 
           title="Magias"
         />
         <FlatList
@@ -121,6 +123,12 @@ function MagicsScreen({ route, navigation }) {
             uid={route.params.idUser}
             col="magics"
           />
+        </Modalize>
+        <Modalize
+          ref={diceModalizeRef}
+          snapPoint={deviceHeight}
+        >
+          <Dice uid={route.params.idUser} />
         </Modalize>
     </SafeAreaView>
   );

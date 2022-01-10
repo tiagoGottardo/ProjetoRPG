@@ -13,7 +13,7 @@ import { SelectedMagicContext } from './components/SelectedMagicContext';
 
 const Stack = createStackNavigator();
 
-export default function App({ route }) {
+export default function App() {
   const [data, setData] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
   const [selectedMagic, setSelectedMagic] = useState([]);
@@ -28,17 +28,17 @@ export default function App({ route }) {
   }
 
   return (
-    <SelectedMagicContext.Provider value={{ selectedMagic, setSelectedMagic }}>
-      <SelectedItemContext.Provider value={{ selectedItem, setSelectedItem }}>
-        <DataContext.Provider value={{ data, setData }}>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login' >
-              <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
-              <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false}} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </DataContext.Provider>
-      </SelectedItemContext.Provider>
-    </SelectedMagicContext.Provider>
+        <SelectedMagicContext.Provider value={{ selectedMagic, setSelectedMagic }}>
+          <SelectedItemContext.Provider value={{ selectedItem, setSelectedItem }}>
+            <DataContext.Provider value={{ data, setData }}>
+              <NavigationContainer>
+                <Stack.Navigator initialRouteName='Login' >
+                  <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
+                  <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false}} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </DataContext.Provider>
+          </SelectedItemContext.Provider>
+        </SelectedMagicContext.Provider>
   );
 }

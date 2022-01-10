@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, Dimensions, SafeAreaView } from 'react-native';
+import { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { Modalize } from 'react-native-modalize';
+
+import Dice from '../components/Dice';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -15,6 +18,7 @@ var deviceHeight = Dimensions.get('window').height;
 function MapsScreen({ navigation, route }) {
   const [data, setData] = useState([]);
   const [mapPermission, setMapPermission] = useState(false);
+  const diceModalizeRef = useRef(null);
 
   const getMapPermission = () => {
     firebase.firestore().collection(route.params.idUser + 'user').orderBy('id')
@@ -34,7 +38,7 @@ function MapsScreen({ navigation, route }) {
   const getMaps = () => {
     firebase.firestore()
     .collection('maps')
-    .orderBy('name')
+    .orderBy('name', 'desc')
     .onSnapshot((snapshot) => {
       let listMapObjects = [];
           snapshot.forEach((doc) => {
@@ -159,10 +163,16 @@ function MapsScreen({ navigation, route }) {
           <Text style={{ fontSize: (deviceWidth/14.4), alignSelf: 'center', alignContent: 'center', fontFamily: 'Righteous_400Regular', color: '#fffefe' }}>
             Mapas
           </Text>
-          <TouchableOpacity style={styles.editButton} onPress={() => {}} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
+          <TouchableOpacity style={styles.editButton} onPress={() => { diceModalizeRef.current?.open(); }} style={{ width: (deviceWidth/6), height: (deviceWidth/6), alignItems: 'center', justifyContent: 'center' }} >
             <Icon name='dice-d20' size={deviceWidth/15} color='#fffefe' />
           </TouchableOpacity>
       </View>
+      <Modalize
+          ref={diceModalizeRef}
+          snapPoint={deviceHeight}
+        >
+          <Dice uid={route.params.idUser} />
+        </Modalize>
     </View> 
   );
 }

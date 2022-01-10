@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { useContext, useEffect } from 'react';
-import { Dimensions } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
+import { Dimensions, Alert } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 import { DrawerContent } from '../components/DrawerContent';
 import ApiKeys from '../components/ApiKeys';
@@ -60,7 +61,7 @@ export default function HomeScreen({ route }) {
   return (
       <Drawer.Navigator
         drawerContent={(props) => <DrawerContent {...props} extraData={idUser} />}
-        initialRouteName='Magias'
+        initialRouteName='Perfil'
         screenOptions={{
           drawerType: "slide",
           drawerStyle: {
@@ -75,5 +76,6 @@ export default function HomeScreen({ route }) {
         <Drawer.Screen name="Mapas" component={MapsScreen} initialParams={{ idUser: idUser }} />
         <Drawer.Screen name="Magias" component={MagicsScreen} initialParams={{ idUser: idUser }} />
       </Drawer.Navigator>
+
   );
 }

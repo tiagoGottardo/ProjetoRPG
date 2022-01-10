@@ -12,6 +12,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height
 
 export function DrawerContent(props) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
@@ -78,16 +79,16 @@ export function DrawerContent(props) {
         </View>
     <SafeAreaView style={{ flex:1 }}>
       <View style={{ flex:1 }}>
-        <DrawerContentScrollView {...props} style={{ marginTop: -25 }}>
+        <DrawerContentScrollView {...props} style={{ marginTop: -deviceHeight/(64/2.5) }}>
             <Drawer.Section>
-              <DrawerItem 
+              <DrawerItem
                 icon={() => (
                   <Icon name="account" size={ (deviceWidth/(36/3)) } color='#212125' />
                 )}  
                 label='Perfil'
                 labelStyle={styles.labels}
                 onPress={() => {props.navigation.navigate('Perfil');}}
-                style={{ borderBottomWidth: 0.5, borderBottomColor: '#CDC9C9', borderRadius: 0, marginTop: -25 }}
+                style={{ borderBottomWidth: 0.5, borderBottomColor: '#CDC9C9', borderRadius: 0, marginTop: -deviceHeight/(64/2.5) }}
               />
               <DrawerItem 
                 icon={() => (

@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, ScrollView, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TapGestureHandler } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
+import { Modalize } from 'react-native-modalize';
 
 import { DataContext } from '../components/DataContext';
 import Header from '../components/Header';
+import Dice from '../components/Dice';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -18,11 +20,12 @@ var deviceHeight = Dimensions.get('window').height;
 
 function ProfileScreen({ route, navigation }) {
   const {data} = useContext(DataContext);
-  const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
+  const [user, setUser] = useState([{ uri: "https://www.colorhexa.com/212125.png" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
   const [text, onChangeText] = useState(user[4].desc);
   const [nameSelected, setNameSelected] = useState(false);
   const [statusSelected, setStatusSelected] = useState(false);
   const [nameInput, onChangeName] = useState('');
+  const diceModalizeRef = useRef(null);
 
   const editTextInput = () => {
     if (text != user[4].desc) {
@@ -157,7 +160,7 @@ function ProfileScreen({ route, navigation }) {
           iconLeft='bars'
           iconRight='dice-d20'
           fLeft={() => navigation.openDrawer()}
-          fRight={() => {}}
+          fRight={() => { diceModalizeRef.current?.open(); }}
           title="Perfil"
         />
         <TapGestureHandler
@@ -279,6 +282,12 @@ function ProfileScreen({ route, navigation }) {
           />
         </KeyboardAvoidingView>
       </ScrollView>
+      <Modalize
+          ref={diceModalizeRef}
+          snapPoint={deviceHeight}
+        >
+          <Dice uid={route.params.idUser} />
+      </Modalize>
     </SafeAreaView>
   );
 }

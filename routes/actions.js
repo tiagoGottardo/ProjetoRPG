@@ -8,16 +8,19 @@ import { TapGestureHandler } from 'react-native-gesture-handler';
 
 import NewAttribute from '../components/NewAttribute';
 import Header from '../components/Header';
+import Dice from '../components/Dice';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 var deviceWidth = Dimensions.get('window').width;
+var deviceHeight = Dimensions.get('window').height;
 
 function ActionsScreen({ navigation, route }) {
   const [mod, setMod] = useState([]);
   const [attributes, setAttributes] = useState([]);
   const modalizeRef = useRef(null);
+  const diceModalizeRef = useRef(null);
 
   const openModalize = () => {
     modalizeRef.current?.open();
@@ -86,7 +89,7 @@ function ActionsScreen({ navigation, route }) {
           iconLeft='bars' 
           iconRight="dice-d20"
           fLeft={() => navigation.openDrawer()} 
-          fRight={() => {}}
+          fRight={() => { diceModalizeRef.current?.open(); }}
           title="Ações"
         />
         <Text style={styles.bigTitle}>Modificadores</Text>
@@ -158,6 +161,12 @@ function ActionsScreen({ navigation, route }) {
           adjustToContentHeight={true}
         >
           <NewAttribute uid={route.params.idUser} modalizeRef={modalizeRef} />
+        </Modalize>
+        <Modalize
+          ref={diceModalizeRef}
+          snapPoint={deviceHeight}
+        >
+          <Dice uid={route.params.idUser} />
         </Modalize>
     </SafeAreaView>
   );
