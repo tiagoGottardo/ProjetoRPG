@@ -73,13 +73,7 @@ function ItemsScreen({ navigation, route }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <Header 
-          iconLeft='bars' 
-          iconRight="dice-d20"
-          fLeft={() => navigation.openDrawer()} 
-          fRight={() => { diceModalizeRef.current?.open(); }}
-          title="Itens"
-        />
+        <View style={{ height: (deviceWidth/(36/10)) }}/>
         <View style={styles.listView}>
           <Icon name="hand" size={deviceWidth/9} style={styles.listIcon} />
           <Text style={styles.listText}>Em mãos</Text>
@@ -160,6 +154,13 @@ function ItemsScreen({ navigation, route }) {
             <Text style={styles.addText}>Novo Item</Text>
           </TouchableOpacity>
         </View>
+        <Header 
+          iconLeft='bars' 
+          iconRight="dice-d20"
+          fLeft={() => navigation.openDrawer()} 
+          fRight={() => { diceModalizeRef.current?.open(); }}
+          title="Itens"
+        />
         <Modalize
           ref={modalizeRef}
           adjustToContentHeight={true}

@@ -7,6 +7,7 @@ import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 
 import HomeScreen from './routes/home';
 import LoginScreen from './routes/login';
+import SignupScreen from './routes/signup';
 import { DataContext } from './components/DataContext';
 import { SelectedItemContext } from './components/SelectedItemContext';
 import { SelectedMagicContext } from './components/SelectedMagicContext';
@@ -34,6 +35,7 @@ export default function App() {
               <NavigationContainer>
                 <Stack.Navigator initialRouteName='Login' >
                   <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
+                  <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false}} />
                   <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false}} />
                 </Stack.Navigator>
               </NavigationContainer>

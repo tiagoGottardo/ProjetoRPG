@@ -105,9 +105,9 @@ function ProfileScreen({ route, navigation }) {
     });
 
     if (!result.cancelled) {
-      uploadImage(result.uri, ("photoPerfil"))
+      uploadImage(result.uri, (route.params.idUser))
       .then(() => {
-        alert('Success', 'Your was uploaded!');
+        alert('Successo', 'Sua imagem modificada!');
       })
       .catch((error) => {
         alert(error);
@@ -156,13 +156,7 @@ function ProfileScreen({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <Header
-          iconLeft='bars'
-          iconRight='dice-d20'
-          fLeft={() => navigation.openDrawer()}
-          fRight={() => { diceModalizeRef.current?.open(); }}
-          title="Perfil"
-        />
+        <View style={{ height: (deviceWidth/(36/9)) }}/>
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={pickImage}
@@ -188,6 +182,9 @@ function ProfileScreen({ route, navigation }) {
               onBlur={editNameInput}
               onChangeText={onChangeName}
               value={nameInput}
+              autoCapitalize = 'words'
+              blurOnSubmit={true}
+              autoCorrect={false}
             />
           }
         <View style={styles.statusLvl}>
@@ -279,9 +276,18 @@ function ProfileScreen({ route, navigation }) {
             value={text}
             multiline = {true}
             numberOfLines = {8}
+            blurOnSubmit={true}
+            autoCorrect={false}
           />
         </KeyboardAvoidingView>
       </ScrollView>
+      <Header
+          iconLeft='bars'
+          iconRight='dice-d20'
+          fLeft={() => navigation.openDrawer()}
+          fRight={() => { diceModalizeRef.current?.open(); }}
+          title="Perfil"
+        />
       <Modalize
           ref={diceModalizeRef}
           snapPoint={deviceHeight}

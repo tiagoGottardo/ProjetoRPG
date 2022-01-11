@@ -30,7 +30,7 @@ export default function ({ title, subtitle, description, icon, modalizeRef, uid 
                 title: ltitle,
                 subtitle: lsubtitle,
                 description: ldescription,
-                icon: 'application'
+                icon: 'diamond-stone'
             })
         } else {
             firebase.firestore().collection(uid + 'magics').doc(ltitle).set({
@@ -50,25 +50,25 @@ export default function ({ title, subtitle, description, icon, modalizeRef, uid 
             ? 
                 <Text style={styles.bigTitle}>Editar Magia</Text>
             :
-                <Text style={styles.bigTitle}>Novo Magia</Text>
+                <Text style={styles.bigTitle}>Nova Magia</Text>
             }
             <TextInput 
                 style={styles.inputText}
-                placeholder="Type title's item."
+                placeholder="Digite o título da magia."
                 type="text"
                 value={iTitle}
                 onChangeText={onChangeTitle}
             />
             <TextInput 
                 style={styles.inputText}
-                placeholder="Type subtitle's item."
+                placeholder="Digite o subtítulo da magia."
                 type="text"
                 value={iSubtitle}
                 onChangeText={onChangeSubtitle}
             />
             <TextInput 
                 style={styles.inputTextMultiline}
-                placeholder="Type description's item."
+                placeholder="Digite a descrição da magia."
                 value={iDescription}
                 multiline = {true}
                 numberOfLines = {8}

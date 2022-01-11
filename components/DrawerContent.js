@@ -12,7 +12,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 const deviceWidth = Dimensions.get('window').width;
-const deviceHeight = Dimensions.get('window').height
+const deviceHeight = Dimensions.get('window').height;
 
 export function DrawerContent(props) {
   const [user, setUser] = useState([{ uri: "https://icon-library.com/images/user-png-icon/user-png-icon-22.jpg" }, { name: 'User' }, { qtd: 0 }, { qtd: 0 }, { desc: '' }]);
@@ -43,9 +43,6 @@ export function DrawerContent(props) {
   const Logout = () => {
     firebase.auth().signOut().then(() => {
       props.navigation.navigate("Login")
-      alert("User desconnected!")
-    }).catch((error) => {
-      alert(error)
     });
   }
 

@@ -6,6 +6,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 var deviceWidth = Dimensions.get('window').width;
+var deviceHeigth = Dimensions.get('window').height;
 
 export default function ({ uid }) {
     const [sidesQtd, setSidesQtd] = useState(1);
@@ -123,11 +124,11 @@ export default function ({ uid }) {
                 <Text style={styles.littleTitle}>Tipo de dado</Text>
                 <View style={styles.plusMinus}>
                     <TouchableOpacity style={styles.buttonLR} onPress={() => { addOrLess('sidesQtd', '-'); }}>
-                        <Icon name="caret-left" size={25} style={{ color: '#fffefe' }}/>
+                        <Icon name="caret-left" size={(deviceWidth/(36/2.5))} style={{ color: '#fffefe' }}/>
                     </TouchableOpacity>
                     <Text style={styles.unidade}>D{diceTypes[sidesQtd]}</Text>
                     <TouchableOpacity style={styles.buttonLR} onPress={() => { addOrLess('sidesQtd', '+'); }}>
-                        <Icon name="caret-right" size={25} style={{ color: '#fffefe' }}/>
+                        <Icon name="caret-right" size={(deviceWidth/(36/2.5))} style={{ color: '#fffefe' }}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -135,11 +136,11 @@ export default function ({ uid }) {
                 <Text style={styles.littleTitle} >Número de dados</Text>
                 <View style={styles.plusMinus}>
                     <TouchableOpacity style={styles.buttonPlusMinus} onPress={() => { addOrLess('dicesQtd', '-'); }}>
-                        <Icon name="minus" size={20} style={styles.icon}/>
+                        <Icon name="minus" size={(deviceWidth/(36/2))} style={styles.icon}/>
                     </TouchableOpacity>
                     <Text style={styles.unidade}>{dicesQtd}</Text>
                     <TouchableOpacity style={styles.buttonPlusMinus} onPress={() => { addOrLess('dicesQtd', '+'); }}>
-                        <Icon name="plus" size={20} style={styles.icon}/>
+                        <Icon name="plus" size={(deviceWidth/(36/2))} style={styles.icon}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -147,11 +148,11 @@ export default function ({ uid }) {
                 <Text style={styles.littleTitle}>Complemento</Text>
                 <View style={styles.plusMinus}>
                     <TouchableOpacity style={styles.buttonPlusMinus} onPress={() => { addOrLess('additional', '-'); }}>
-                        <Icon name="minus" size={15} style={styles.icon}/>
+                        <Icon name="minus" size={(deviceWidth/(36/1.5))} style={styles.icon}/>
                     </TouchableOpacity>
                     <Text style={styles.unidade}>{additional}</Text>
                     <TouchableOpacity style={styles.buttonPlusMinus} onPress={() => { addOrLess('additional', '+'); }}>
-                        <Icon name="plus" size={15} style={styles.icon}/>
+                        <Icon name="plus" size={(deviceWidth/(36/1.5))} style={styles.icon}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -180,7 +181,7 @@ export default function ({ uid }) {
                 <Text style={styles.bigTitle}>Histórico de jogadas</Text>
                 <ScrollView>
                     <FlatList
-                        style={{ alignSelf: 'center', marginBottom: 10, }}
+                        style={{ alignSelf: 'center', marginBottom: (deviceWidth/(36/10)), }}
                         data={lastDice}
                         keyExtractor={item => item.title}
                         renderItem={({item}) => {
@@ -234,7 +235,7 @@ const styles = StyleSheet.create({
     roll: {
         flex: 1,
         width: (deviceWidth/(36/13.5)),
-        padding: 3,
+        padding: (deviceWidth/(36/0.3)),
     },
     imagePlayer: {
         height: (deviceWidth/(36/12)),
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
         borderRadius: (deviceWidth/(36/3)),
         width: (deviceWidth/(36/30)),
         height: (deviceWidth/(36/15)),
-        marginBottom: 15,
+        marginBottom: (deviceWidth/(36/1.5)),
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -269,17 +270,17 @@ const styles = StyleSheet.create({
     },
     item: {
         flexDirection: 'row',
-        marginVertical: 5,
+        marginVertical: (deviceWidth/(36/0.5)),
         width: (deviceWidth/(36/30)),
         alignSelf: 'center',
-        height: 40
+        height: (deviceWidth/(36/4))
     },
     plusMinus: {
         backgroundColor: '#212125',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderRadius: 15,
+        borderRadius: (deviceWidth/(36/1.5)),
         flex: 5
     },
     icon: {
@@ -287,36 +288,36 @@ const styles = StyleSheet.create({
     },
     unidade: {
         color: '#fffefe',
-        fontSize: 18
+        fontSize: (deviceWidth/(36/2))
     },
     buttonPlusMinus: {
         backgroundColor: '#fffefe',
-        marginHorizontal: 5,
-        borderRadius: 10,
-        height: 30,
-        width: 30,
+        marginHorizontal: (deviceWidth/(36/0.5)),
+        borderRadius: (deviceWidth/(36/1)),
+        height: (deviceWidth/(36/3)),
+        width: (deviceWidth/(36/3)),
         alignItems: 'center',
         justifyContent: 'center'
     },
     buttonLR: {
         backgroundColor: '#212125',
-        marginHorizontal: 5,
-        borderRadius: 10,
-        height: 30,
-        width: 30,
+        marginHorizontal: (deviceWidth/(36/0.5)),
+        borderRadius: (deviceWidth/(36/1)),
+        height: (deviceWidth/(36/3)),
+        width: (deviceWidth/(36/3)),
         alignItems: 'center',
         justifyContent: 'center'
     },
     greenButton: {
         width: (deviceWidth/(36/30)),
-        padding: 10,
+        padding: (deviceWidth/(36/1)),
         height: (deviceWidth/(36/5)),
         backgroundColor: '#3CB371',
         color: '#212125',
         justifyContent: 'center',
-        marginTop: 15,
+        marginTop: (deviceWidth/(36/1.5)),
         alignSelf: 'center',
-        marginBottom: 15
+        marginBottom: (deviceWidth/(36/1.5))
     },
     greenButtonText: { 
         alignSelf: 'center', 

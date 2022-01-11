@@ -26,11 +26,14 @@ const styles = StyleSheet.create({
     },
     header: {
         height: (deviceWidth/6),
+        width: (deviceWidth/(36/33)),
         flexDirection: 'row',
         backgroundColor: '#212125',
         margin: (deviceWidth/24),
         borderRadius: (deviceWidth/12),
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        position: 'absolute',
+        top: 20
       }
 })

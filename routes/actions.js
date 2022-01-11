@@ -85,13 +85,7 @@ function ActionsScreen({ navigation, route }) {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
       >
-        <Header 
-          iconLeft='bars' 
-          iconRight="dice-d20"
-          fLeft={() => navigation.openDrawer()} 
-          fRight={() => { diceModalizeRef.current?.open(); }}
-          title="Ações"
-        />
+        <View style={{ height: (deviceWidth/(36/8)) }}/>
         <Text style={styles.bigTitle}>Modificadores</Text>
         <FlatList
           style={{ alignSelf: 'center', marginBottom: 10 }}
@@ -100,13 +94,13 @@ function ActionsScreen({ navigation, route }) {
           renderItem={({item}) => {
             return(
               <View style={styles.List}>
-                <View style={styles.container} flexDirection='row'>
+                <View style={{ flex: 10 }} flexDirection='row'>
                   <Text style={styles.title}>{item.title}</Text>
                 </View>
-                <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
+                <View style={ { flex: 2, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
                   <Text style={styles.title}>{item.qtd}</Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: 'row-reverse', marginLeft: 3 }}>
+                <View style={{ flex: 3, flexDirection: 'row-reverse', marginLeft: 3 }}>
                   <TouchableOpacity style={styles.Button} onPress={() => { AddOrLess(item.title, 'mod', '+');}}>
                     <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.IconButton} />
                   </TouchableOpacity>
@@ -131,14 +125,14 @@ function ActionsScreen({ navigation, route }) {
                   numberOfTaps={2}
                   onActivated={() => deleteAttribute(item.title)}
                 >
-                  <View style={styles.container} flexDirection='row'>
+                  <View style={{ flex: 10 }} flexDirection='row'>
                     <Text style={styles.title}>{item.title}</Text>
                   </View>
                 </TapGestureHandler>
-                <View style={ { flex: 1, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
+                <View style={ { flex: 2, flexDirection: 'row', alignSelf: 'center', justifyContent: 'center'} }>
                   <Text style={styles.title}>{item.qtd}</Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: 'row-reverse', marginLeft: 3 }}>
+                <View style={{ flex: 3, flexDirection: 'row-reverse', marginLeft: 3 }}>
                   <TouchableOpacity style={styles.Button} onPress={() => { AddOrLess(item.title, 'attributes', '+');}}>
                     <Icon name='plus-box' size={(deviceWidth/14) - 10} style={styles.IconButton} />
                   </TouchableOpacity>
@@ -151,6 +145,13 @@ function ActionsScreen({ navigation, route }) {
           }}
         />
       </ScrollView>
+      <Header 
+            iconLeft='bars' 
+            iconRight="dice-d20"
+            fLeft={() => navigation.openDrawer()} 
+            fRight={() => { diceModalizeRef.current?.open(); }}
+            title="Ações"
+        />
       <View style={styles.addView}>
           <TouchableOpacity style={styles.addButton} onPress={() => { openModalize(); }}>
             <Text style={styles.addText}>Novo Atributo</Text>
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
   },
   List: {
     width: (deviceWidth /(36/31)),
-    height: (deviceWidth/9),
+    height: (deviceWidth/(36/5)),
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: (deviceWidth/18),

@@ -49,7 +49,7 @@ export default function ({ title, subtitle, description, icon, target_color, mod
 
     return (
         <View style={styles.container}>
-            {target_color != ''
+            {icon != ''
             ? 
                 <Text style={styles.bigTitle}>Editar Item</Text>
             :
@@ -57,21 +57,21 @@ export default function ({ title, subtitle, description, icon, target_color, mod
             }
             <TextInput 
                 style={styles.inputText}
-                placeholder="Type title's item."
+                placeholder="Digite o título do item."
                 type="text"
                 value={iTitle}
                 onChangeText={onChangeTitle}
             />
             <TextInput 
                 style={styles.inputText}
-                placeholder="Type subtitle's item."
+                placeholder="Digite o subtítulo do item."
                 type="text"
                 value={iSubtitle}
                 onChangeText={onChangeSubtitle}
             />
             <TextInput 
                 style={styles.inputTextMultiline}
-                placeholder="Type description's item."
+                placeholder="Digite a descrição do item."
                 value={iDescription}
                 multiline = {true}
                 numberOfLines = {8}

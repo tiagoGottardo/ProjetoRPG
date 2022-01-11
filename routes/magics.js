@@ -64,14 +64,8 @@ function MagicsScreen({ route, navigation }) {
         style={styles.container}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-      > 
-        <Header 
-          iconLeft='bars'
-          iconRight='dice-d20'
-          fLeft={() => navigation.openDrawer()} 
-          fRight={() => { diceModalizeRef.current?.open(); }} 
-          title="Magias"
-        />
+      >
+        <View style={{ height: (deviceWidth/(36/10)) }}/>
         <FlatList
           style={{ alignSelf: 'center', marginBottom: 10, }}
           data={magics}
@@ -96,10 +90,17 @@ function MagicsScreen({ route, navigation }) {
         </View>
       </ScrollView>
       <View style={styles.addView}>
-          <TouchableOpacity style={styles.addButton} onPress={() => { newMagic(); }}>
-            <Text style={styles.addText}>Nova Magia</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.addButton} onPress={() => { newMagic(); }}>
+          <Text style={styles.addText}>Nova Magia</Text>
+        </TouchableOpacity>
         </View>
+        <Header 
+          iconLeft='bars'
+          iconRight='dice-d20'
+          fLeft={() => navigation.openDrawer()} 
+          fRight={() => { diceModalizeRef.current?.open(); }} 
+          title="Magias"
+        />
         <Modalize
           ref={modalizeRef}
           adjustToContentHeight={true}
