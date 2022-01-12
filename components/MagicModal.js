@@ -17,7 +17,7 @@ export default function ({ title, subtitle, description, icon, modalizeRef, uid 
     }
 
     const deleteMagic = (nameDoc) => {
-        firebase.firestore().collection(uid + 'items').doc(nameDoc).delete()
+        firebase.firestore().collection(uid + 'magics').doc(nameDoc).delete()
         closeModalize();
     }
 
