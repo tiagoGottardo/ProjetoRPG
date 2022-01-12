@@ -25,7 +25,6 @@ export default function ({ title, iconModalizeRef, uid, col }) {
     }
 
     const editIcon = (iconSelected) => {
-        console.log(uid, col, title);
         firebase.firestore().collection(uid + col).doc(title).update({
             icon: iconSelected
         })

@@ -183,7 +183,7 @@ function ItemsScreen({ navigation, route }) {
             iconModalizeRef={iconModalizeRef.current}
             title={selectedItem[0]}
             uid={route.params.idUser}
-            collection="items"
+            col="items"
           />
         </Modalize>
         <Modalize

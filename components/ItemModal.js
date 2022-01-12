@@ -78,7 +78,7 @@ export default function ({ title, subtitle, description, icon, target_color, mod
                 onChangeText={onChangeDescription}
             />
             <View style={styles.viewButton}>
-                {target_color == 0 || target_color == 1 || target_color == 2
+                {icon != ''
                 ?
                 <TouchableOpacity style={styles.delButton} disabled={false} onPress={() => { deleteItem(title); }} >
                     <Icon name="close-thick" size={30} style={styles.iconButton} />
